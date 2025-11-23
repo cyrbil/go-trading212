@@ -1,0 +1,17 @@
+# Ignore everything
+/*
+
+# But not these files everywhere...
+!**/.gitattributes
+!**/.gitignore
+!**/README.md
+!**/LICENSE
+
+# Or these specific files
+!go.mod
+!go.sum
+
+# And not these folders
+!api/
+!internal/
+!pkg/
