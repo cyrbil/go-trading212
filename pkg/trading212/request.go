@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
 type Request struct {
@@ -23,12 +23,12 @@ type Request struct {
 }
 
 type requestMaker interface {
-	NewRequest(method string, path trading212.APIEndpoint, body io.Reader) (*Request, error)
+	NewRequest(method string, path internal.APIEndpoint, body io.Reader) (*Request, error)
 }
 
 // NewRequest build a Request for the API.
 // Prefer to use the available methods instead.
-func (api *API) NewRequest(method string, path trading212.APIEndpoint, body io.Reader) (*Request, error) {
+func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Reader) (*Request, error) {
 	endpoint := fmt.Sprintf("https://%s/%s", api.domain, path)
 
 	ctx := context.Background()
@@ -39,7 +39,7 @@ func (api *API) NewRequest(method string, path trading212.APIEndpoint, body io.R
 	if err != nil {
 		cancel(err)
 
-		return nil, err
+		return nil, fmt.Errorf("fail to create http request: %w", err)
 	}
 
 	// authentication
@@ -59,7 +59,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	defer request.cancel(errors.New("request done"))
 
 	rateLimitPath := request.httpRequest.URL.EscapedPath()
-	trading212.ApplyRateLimit(rateLimitPath, request.api.rateLimits)
+	internal.ApplyRateLimit(rateLimitPath, request.api.rateLimits)
 
 	//nolint:bodyclose // body is closed in lambda
 	response, err := request.api.client.Do(request.httpRequest)
@@ -79,14 +79,14 @@ func (request *Request) Do() (*json.RawMessage, error) {
 
 	slog.Debug("Request status", "status", response.Status)
 
-	limits, err := trading212.ParseRateLimits(response)
+	limits, err := internal.ParseRateLimits(response)
 	if err != nil {
 		slog.Warn("Fail to parse rate limits", "error", err)
 	} else {
 		request.api.rateLimits[rateLimitPath] = *limits
 	}
 
-	if response.StatusCode == trading212.RateLimitedErrorCode {
+	if response.StatusCode == internal.RateLimitedErrorCode {
 		time.Sleep(time.Duration(request.retries) * time.Second)
 
 		request.retries++
@@ -105,7 +105,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	if err != nil {
 		err := errors.Join(errors.New("error reading api response"), err)
 		request.cancel(err)
-		
+
 		return nil, err
 	}
 
