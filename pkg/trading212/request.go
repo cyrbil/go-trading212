@@ -15,10 +15,15 @@ import (
 
 var (
 	errRequestTimeout = errors.New("request timeout")
-	errNewHttp        = fmt.Errorf("fail to create http request")
+	errNewHttp        = errors.New("fail to create http request")
 	errApiRequest     = errors.New("error executing api request")
 	errReadingApi     = errors.New("error reading api response")
+	errNon200         = errors.New("error api return non 200")
 )
+
+func non200Error(status string) error {
+	return fmt.Errorf("%w, status: %s", errNon200, status)
+}
 
 type Request struct {
 	//nolint:containedctx
@@ -106,7 +111,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	}
 
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
-		err := fmt.Errorf("error api return non 200, status: %s", response.Status)
+		err := non200Error(response.Status)
 		request.cancel(err)
 
 		return nil, err
