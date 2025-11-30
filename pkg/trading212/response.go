@@ -55,10 +55,11 @@ func (r *Response[T]) Object() (*T, error) {
 	if !ok {
 		return nil, errors.New("no value returned from iterator")
 	}
-	
+
 	return &value, nil
 }
 
+// lint:cyclop
 func (r *Response[T]) Items() (iter.Seq[T], error) {
 	err := r.validate()
 	if err != nil {
@@ -68,7 +69,7 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 	// detect paginated results
 	var paginatedResponse paginatedResponse
 	decoder := json.NewDecoder(bytes.NewBuffer(*r.raw))
-	decoder.DisallowUnknownFields()
+	decoder.DisallowUnknownFields() // nolint:wsl
 
 	err = decoder.Decode(&paginatedResponse)
 	if err != nil {
@@ -80,13 +81,11 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 	// decode current array
 	var data []T
 	decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items))
-	decoder.DisallowUnknownFields()
+	decoder.DisallowUnknownFields() // nolint:wsl
 
 	err = decoder.Decode(&data)
 	if err != nil {
 		var value T
-		decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items))
-		decoder.DisallowUnknownFields()
 
 		err = decoder.Decode(&value)
 		if err != nil {

@@ -58,8 +58,8 @@ type PieRequest struct {
 	EndDate            time.Time `json:"endDate"`
 	Goal               float64   `json:"goal"`
 	InstrumentShares   struct {
-		AAPLUSEQ float64 `json:"AAPL_US_EQ"` //lint:tagliatelle
-		MSFTUSEQ float64 `json:"MSFT_US_EQ"` //lint:tagliatelle
+		AAPLUSEQ float64 `json:"AAPL_US_EQ"` //nolint:tagliatelle
+		MSFTUSEQ float64 `json:"MSFT_US_EQ"` //nolint:tagliatelle
 	} `json:"instrumentShares"`
 }
 

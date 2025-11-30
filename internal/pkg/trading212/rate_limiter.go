@@ -66,10 +66,10 @@ func ParseRateLimits(response *http.Response) (*APIRateLimits, error) {
 
 	rateLimits := &APIRateLimits{
 		Limit: headers["limit"],
-		//lint:gosec // integer overflow accepted
+		//nolint:gosec // integer overflow accepted
 		Period:    time.Duration(headers["period"]) * time.Second,
 		Remaining: headers["remaining"],
-		//lint:gosec // integer overflow accepted
+		//nolint:gosec // integer overflow accepted
 		Reset: time.Unix(int64(headers["reset"]), 0),
 		Used:  headers["used"],
 	}

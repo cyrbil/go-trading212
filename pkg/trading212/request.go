@@ -9,9 +9,7 @@ import (
 	"log/slog"
 	"net/http"
 	"time"
-)
 
-import (
 	"github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
@@ -99,6 +97,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		err := fmt.Errorf("error api return non 200, status: %s", response.Status)
 		request.cancel(err)
+
 		return nil, err
 	}
 
@@ -106,9 +105,10 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	if err != nil {
 		err := errors.Join(errors.New("error reading api response"), err)
 		request.cancel(err)
+		
 		return nil, err
 	}
-	
+
 	slog.Debug("Response body", "body", data)
 
 	return (*json.RawMessage)(&data), nil
