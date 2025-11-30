@@ -9,9 +9,7 @@ import (
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
-var (
-	errConversionBody = errors.New("error converting request body")
-)
+var errConversionBody = errors.New("error converting request body")
 
 // helper struct to have a json reader object.
 type jsonBody struct{ data any }
