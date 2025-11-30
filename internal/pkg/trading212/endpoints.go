@@ -6,6 +6,7 @@ const version APIEndpoint = "api/v0"
 
 const endpointBase = version + "/equity"
 
+//nolint:godoclint
 //goland:noinspection GoCommentStart
 const (
 	// Account

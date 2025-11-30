@@ -59,7 +59,7 @@ func (r *Response[T]) Object() (*T, error) {
 	return &value, nil
 }
 
-//nolint:cyclop
+//nolint:cyclop,funlen  // TODO: too complex
 func (r *Response[T]) Items() (iter.Seq[T], error) {
 	err := r.validate()
 	if err != nil {
@@ -68,8 +68,8 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 
 	// detect paginated results
 	var paginatedResponse paginatedResponse
-	decoder := json.NewDecoder(bytes.NewBuffer(*r.raw))
-	decoder.DisallowUnknownFields() //nolint:wsl
+	decoder := json.NewDecoder(bytes.NewBuffer(*r.raw)) //nolint:wsl
+	decoder.DisallowUnknownFields()
 
 	err = decoder.Decode(&paginatedResponse)
 	if err != nil {
@@ -80,8 +80,8 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 
 	// decode current array
 	var data []T
-	decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items))
-	decoder.DisallowUnknownFields() //nolint:wsl
+	decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items)) //nolint:wsl
+	decoder.DisallowUnknownFields()
 
 	err = decoder.Decode(&data)
 	if err != nil {
@@ -91,7 +91,7 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 		if err != nil {
 			return nil, errors.Join(errors.New("error reading response json"), err)
 		}
-		
+
 		data = []T{value}
 	}
 

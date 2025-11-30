@@ -15,6 +15,7 @@ linters:
     - depguard
     - iface
     - revive
+    - golines
 
 formatters:
   # Enable specific formatter.
