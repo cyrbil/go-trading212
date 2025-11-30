@@ -1,5 +1,6 @@
 # See the dedicated "version" documentation section.
 version: "2"
+
 linters:
   # Default set of linters.
   # The value can be:
@@ -9,6 +10,7 @@ linters:
   # - `fast`: enables only linters considered as "fast" (`golangci-lint help linters --json | jq '[ .[] | select(.fast==true) ] | map(.name)'`).
   # Default: standard
   default: all
+
 formatters:
   # Enable specific formatter.
   # Default: [] (uses standard Go formatting)
@@ -19,6 +21,7 @@ formatters:
     - goimports
     - golines
     - swaggo
+
 run:
   # Timeout for total work, e.g. 30s, 5m, 5m30s.
   # If the value is lower or equal to 0, the timeout is disabled.
