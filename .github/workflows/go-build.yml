@@ -17,14 +17,15 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     runs-on: ${{ matrix.os }}
-    
+
     steps:
       - name: Checkout project
         uses: actions/checkout@v6.0.0
 
       - name: Linters
-        uses: golangci/golangci-lint-action@v6.0.1
-        if: ${{ matrix.os ==  'ubuntu-latest' }}
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.6
 
       - name: Set-up Go
         uses: actions/setup-go@v6.1.0
