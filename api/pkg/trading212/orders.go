@@ -48,6 +48,7 @@ type LimitOrderRequest struct {
 
 type MarketOrderRequest struct {
 	baseOrderRequest
+
 	ExtendedHours bool `json:"extendedHours,omitempty"`
 }
 

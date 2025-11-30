@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"iter"
 	"net/http"
-)
 
-import (
 	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
@@ -76,20 +74,24 @@ func (op *pies) CreatePie(req models.PieRequest) (*models.PieDetails, error) {
 
 func (op *pies) DeletePie(id uint) error {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.DeletePie, id))
+
 	return runOperation[models.Empty](op.api, http.MethodDelete, endpoint, nil).err
 }
 
 func (op *pies) FetchPie(id uint) (*models.PieDetails, error) {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.FetchPie, id))
+
 	return runOperation[models.PieDetails](op.api, http.MethodGet, endpoint, nil).Object()
 }
 
 func (op *pies) UpdatePie(id uint, req models.PieRequest) (*models.PieDetails, error) {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.UpdatePie, id))
+
 	return runOperation[models.PieDetails](op.api, http.MethodPost, endpoint, req).Object()
 }
 
 func (op *pies) DuplicatePies(id uint, req models.PieMetaRequest) (*models.PieDetails, error) {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d/duplicate", internal.DuplicatePie, id))
+
 	return runOperation[models.PieDetails](op.api, http.MethodPost, endpoint, req).Object()
 }

@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"iter"
 	"net/http"
-)
 
-import (
 	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
@@ -115,10 +113,12 @@ func (op *orders) PlaceStopLimitOrder(req models.StopLimitOrderRequest) (*models
 
 func (op *orders) CancelOrder(id int64) (*models.Empty, error) {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.CancelOrder, id))
+
 	return runOperation[models.Empty](op.api, http.MethodDelete, endpoint, nil).Object()
 }
 
 func (op *orders) GetPendingOrderByID(id int64) (*models.Order, error) {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.GetPendingOrderByID, id))
+
 	return runOperation[models.Order](op.api, http.MethodGet, endpoint, nil).Object()
 }

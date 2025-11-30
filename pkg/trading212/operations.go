@@ -3,43 +3,48 @@ package trading212
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
-)
 
-import (
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
-// helper struct to have a json reader object
+var errConversionBody = errors.New("error converting request body")
+
+// helper struct to have a json reader object.
 type jsonBody struct{ data any }
 
-func (b jsonBody) Read(p []byte) (n int, err error) {
+func (b jsonBody) Read(buf []byte) (int, error) {
 	jsonData, err := json.Marshal(b.data)
 	if err != nil {
-		return 0, err
+		return 0, errors.Join(errConversionBody, err)
 	}
-	return bytes.NewReader(jsonData).Read(p)
+
+	//nolint:wrapcheck  // no need to wrap this
+	return bytes.NewReader(jsonData).Read(buf)
 }
 
-// helper function for the operations
+// helper function for the operations.
 func runOperation[T any](api requestMaker, method string, endpoint internal.APIEndpoint, body any) *Response[T] {
 	var requestBodyReader io.Reader
 	if body != nil {
 		requestBodyReader = jsonBody{body}
 	}
+
 	request, err := api.NewRequest(method, endpoint, requestBodyReader)
 	if err != nil {
-		return &Response[T]{err: err}
+		return &Response[T]{request: request, raw: nil, err: err}
 	}
+
 	data, err := request.Do()
 	if err != nil {
-		return &Response[T]{err: err}
+		return &Response[T]{request: request, raw: data, err: err}
 	}
 
-	return &Response[T]{request: request, raw: data}
+	return &Response[T]{request: request, raw: data, err: nil}
 }
 
-// operations regroups all available operations
+// operations regroups all available operations.
 type operations struct {
 	// Account operations.
 	// Access fundamental information about your trading account.
@@ -76,7 +81,8 @@ type operations struct {
 	// Manage your investment Pies. Use these endpoints to create, view, update,
 	// and delete your custom portfolios, making automated and diversified investing simple.
 	//
-	// Deprecation notice: The current state of the Pies API, while still operational, won't be further supported and updated.
+	// Deprecation notice: The current state of the Pies API,
+	// while still operational, won't be further supported and updated.
 	// See: https://docs.trading212.com/api/pies-(deprecated)
 	Pies piesOperations
 }

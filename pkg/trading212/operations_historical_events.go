@@ -3,9 +3,7 @@ package trading212
 import (
 	"iter"
 	"net/http"
-)
 
-import (
 	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
@@ -36,7 +34,8 @@ type operationListReports interface {
 	// Retrieves a list of all requested CSV reports and their current status.
 	// Asynchronous Workflow:
 	//   - Call POST /history/exports to request a report. You will receive a reportId.
-	//   - Periodically call this endpoint (GET /history/exports) to check the status of the report corresponding to your reportId.
+	//   - Periodically call this endpoint (GET /history/exports) to check the status
+	//     of the report corresponding to your reportId.
 	//   - Once the status is Finished, the downloadLink field will contain a URL to download the CSV file.
 	//
 	// See: https://docs.trading212.com/api/historical-events/getreports

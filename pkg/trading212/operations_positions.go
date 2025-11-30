@@ -3,22 +3,16 @@ package trading212
 import (
 	"iter"
 	"net/http"
-)
 
-import (
 	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
-type operationGetAllPositions interface {
+type positionsOperations interface {
 	// GetAllPositions operation.
 	// Fetch all open positions for your account.
 	// See: https://docs.trading212.com/api/positions/getpositions
 	GetAllPositions() (iter.Seq[models.Position], error)
-}
-
-type positionsOperations interface {
-	operationGetAllPositions
 }
 
 type positions struct {
