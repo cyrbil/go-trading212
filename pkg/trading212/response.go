@@ -85,7 +85,7 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 		var value T
 		decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items))
 		decoder.DisallowUnknownFields()
-		
+
 		err = decoder.Decode(&value)
 		if err != nil {
 			return nil, err
