@@ -15,7 +15,7 @@ type Response[T any] struct {
 	raw     *json.RawMessage
 }
 
-// paginatedResponse is a generic wrapper for paginated API responses
+// paginatedResponse is a generic wrapper for paginated API responses.
 type paginatedResponse struct {
 	Items        *json.RawMessage `json:"items"`
 	NextPagePath *string          `json:"nextPagePath"`
@@ -88,7 +88,7 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 
 		err = decoder.Decode(&value)
 		if err != nil {
-			return nil, err
+			return nil, errors.Join(errors.New("error reading response json"), err)
 		}
 		data = []T{value}
 	}

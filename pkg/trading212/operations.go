@@ -3,6 +3,7 @@ package trading212
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 )
 
@@ -13,13 +14,13 @@ import (
 // helper struct to have a json reader object.
 type jsonBody struct{ data any }
 
-func (b jsonBody) Read(p []byte) (int, error) {
+func (b jsonBody) Read(buf []byte) (int, error) {
 	jsonData, err := json.Marshal(b.data)
 	if err != nil {
-		return 0, err
+		return 0, errors.Join(errors.New("error converting request body"), err)
 	}
 
-	return bytes.NewReader(jsonData).Read(p)
+	return bytes.NewReader(jsonData).Read(buf)
 }
 
 // helper function for the operations.
@@ -42,7 +43,7 @@ func runOperation[T any](api requestMaker, method string, endpoint internal.APIE
 	return &Response[T]{request: request, raw: data, err: nil}
 }
 
-// operations regroups all available operations
+// operations regroups all available operations.
 type operations struct {
 	// Account operations.
 	// Access fundamental information about your trading account.

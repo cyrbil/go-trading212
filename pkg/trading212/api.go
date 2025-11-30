@@ -9,6 +9,8 @@ import (
 	"github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
+const defaultTimeout = 5 * time.Second
+
 type APIDomain string
 
 const (
@@ -37,7 +39,6 @@ func NewAPIDemo(apiKey string, apiSecret SecureString) *API {
 
 func NewAPI(domain APIDomain, apiKey string, apiSecret SecureString) *API {
 	api := &API{
-		operations: operations{},
 		domain:     domain,
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
@@ -46,7 +47,15 @@ func NewAPI(domain APIDomain, apiKey string, apiSecret SecureString) *API {
 			Transport:     nil,
 			CheckRedirect: nil,
 			Jar:           nil,
-			Timeout:       5 * time.Second,
+			Timeout:       defaultTimeout,
+		},
+		operations: operations{
+			Account:          nil,
+			Instruments:      nil,
+			Orders:           nil,
+			Positions:        nil,
+			HistoricalEvents: nil,
+			Pies:             nil,
 		},
 	}
 

@@ -35,10 +35,13 @@ func (api *API) NewRequest(method string, path trading212.APIEndpoint, body io.R
 	ctx := context.Background()
 	ctx, _ = context.WithTimeoutCause(ctx, api.client.Timeout, errors.New("request timeout"))
 	ctx, cancel := context.WithCancelCause(ctx)
+
 	request, err := http.NewRequestWithContext(ctx, method, endpoint, body)
 	if err != nil {
+		cancel(err)
 		return nil, err
 	}
+
 	// authentication
 	request.SetBasicAuth(api.apiKey, string(api.apiSecret))
 	// api accepts json
@@ -73,7 +76,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	}(response.Body)
 
 	slog.Debug("Request status", "status", response.Status)
-	
+
 	limits, err := trading212.ParseRateLimits(response)
 	if err != nil {
 		slog.Warn("Fail to parse rate limits", "error", err)
@@ -83,7 +86,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 
 	if response.StatusCode == trading212.RateLimitedErrorCode {
 		time.Sleep(time.Duration(request.retries) * time.Second)
-		request.retries += 1
+		request.retries++
 		return request.Do()
 	}
 
