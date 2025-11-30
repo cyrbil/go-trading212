@@ -7,6 +7,13 @@ import (
 	"iter"
 )
 
+var (
+	errRequestNil       = errors.New("request is nil")
+	errRequestEmpty     = errors.New("request is empty")
+	errEmptyIter        = errors.New("error, empty iterator")
+	errDecodingResponse = errors.New("error reading response json")
+)
+
 // Response is a future abstraction that will normalize any API response
 // (object, array or paginated array). Implement detection/parsing in a follow-up change.
 type Response[T any] struct {
@@ -27,11 +34,11 @@ func (r *Response[T]) validate() error {
 	}
 
 	if r.request == nil {
-		return errors.New("request is nil")
+		return errRequestNil
 	}
 
 	if r.raw == nil {
-		return errors.New("response is empty")
+		return errRequestEmpty
 	}
 
 	return nil
@@ -53,7 +60,7 @@ func (r *Response[T]) Object() (*T, error) {
 
 	value, ok := next()
 	if !ok {
-		return nil, errors.New("no value returned from iterator")
+		return nil, errEmptyIter
 	}
 
 	return &value, nil
@@ -89,7 +96,7 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 
 		err = decoder.Decode(&value)
 		if err != nil {
-			return nil, errors.Join(errors.New("error reading response json"), err)
+			return nil, errors.Join(errDecodingResponse, err)
 		}
 
 		data = []T{value}

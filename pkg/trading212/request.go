@@ -13,6 +13,13 @@ import (
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
+var (
+	errRequestTimeout = errors.New("request timeout")
+	errNewHttp        = fmt.Errorf("fail to create http request")
+	errApiRequest     = errors.New("error executing api request")
+	errReadingApi     = errors.New("error reading api response")
+)
+
 type Request struct {
 	//nolint:containedctx
 	Ctx         context.Context
@@ -32,7 +39,7 @@ func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Rea
 	endpoint := fmt.Sprintf("https://%s/%s", api.domain, path)
 
 	ctx := context.Background()
-	ctx, timeoutCancel := context.WithTimeoutCause(ctx, api.client.Timeout, errors.New("request timeout"))
+	ctx, timeoutCancel := context.WithTimeoutCause(ctx, api.client.Timeout, errRequestTimeout)
 	ctx, causeCancel := context.WithCancelCause(ctx)
 	cancel := func(cause error) {
 		timeoutCancel()
@@ -43,7 +50,7 @@ func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Rea
 	if err != nil {
 		cancel(err)
 
-		return nil, fmt.Errorf("fail to create http request: %w", err)
+		return nil, errors.Join(errNewHttp, err)
 	}
 
 	// authentication
@@ -60,7 +67,7 @@ func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Rea
 
 // Do executes the current request.
 func (request *Request) Do() (*json.RawMessage, error) {
-	defer request.cancel(errors.New("request done"))
+	defer request.cancel(nil)
 
 	rateLimitPath := request.httpRequest.URL.EscapedPath()
 	internal.ApplyRateLimit(rateLimitPath, request.api.rateLimits)
@@ -68,7 +75,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	//nolint:bodyclose // body is closed in lambda
 	response, err := request.api.client.Do(request.httpRequest)
 	if err != nil {
-		err := errors.Join(errors.New("error executing api request"), err)
+		err := errors.Join(errApiRequest, err)
 		request.cancel(err)
 
 		return nil, err
@@ -107,7 +114,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 
 	data, err := io.ReadAll(response.Body)
 	if err != nil {
-		err := errors.Join(errors.New("error reading api response"), err)
+		err := errors.Join(errReadingApi, err)
 		request.cancel(err)
 
 		return nil, err

@@ -9,13 +9,17 @@ import (
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
+var (
+	errConversionBody = errors.New("error converting request body")
+)
+
 // helper struct to have a json reader object.
 type jsonBody struct{ data any }
 
 func (b jsonBody) Read(buf []byte) (int, error) {
 	jsonData, err := json.Marshal(b.data)
 	if err != nil {
-		return 0, errors.Join(errors.New("error converting request body"), err)
+		return 0, errors.Join(errConversionBody, err)
 	}
 
 	//nolint:wrapcheck  // no need to wrap this
