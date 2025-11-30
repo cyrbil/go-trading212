@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
@@ -64,14 +65,20 @@ func ParseRateLimits(response *http.Response) (*APIRateLimits, error) {
 		headers[key] = value
 	}
 
+	if headers["period"] > math.MaxInt64 {
+		return nil, errHeaderConversion
+	}
+
+	if headers["reset"] > math.MaxInt64 {
+		return nil, errHeaderConversion
+	}
+
 	rateLimits := &APIRateLimits{
-		Limit: headers["limit"],
-		//nolint:gosec // integer overflow accepted
-		Period:    time.Duration(headers["period"]) * time.Second,
+		Limit:     headers["limit"],
+		Period:    time.Duration(headers["period"]) * time.Second, //nolint:gosec
 		Remaining: headers["remaining"],
-		//nolint:gosec // integer overflow accepted
-		Reset: time.Unix(int64(headers["reset"]), 0),
-		Used:  headers["used"],
+		Reset:     time.Unix(int64(headers["reset"]), 0), //nolint:gosec
+		Used:      headers["used"],
 	}
 
 	return rateLimits, nil
