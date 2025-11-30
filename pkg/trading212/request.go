@@ -20,6 +20,10 @@ type Request struct {
 	retries     int
 }
 
+type requestMaker interface {
+	NewRequest(method string, path trading212.APIEndpoint, body io.Reader) (*Request, error)
+}
+
 // NewRequest build a Request for the API.
 // Prefer to use the available methods instead.
 func (api *API) NewRequest(method string, path trading212.APIEndpoint, body io.Reader) (*Request, error) {
@@ -52,9 +56,10 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	slog.Debug("Request status", "status", response.Status)
 	limits, err := trading212.ParseRateLimits(response)
 	if err != nil {
-		return nil, err
+		slog.Warn("Fail to parse rate limits", "error", err)
+	} else {
+		request.api.rateLimits[rateLimitPath] = *limits
 	}
-	request.api.rateLimits[rateLimitPath] = *limits
 
 	if response.StatusCode == 429 {
 		time.Sleep(time.Duration(request.retries) * time.Second)
