@@ -15,8 +15,6 @@ linters:
     - depguard
     - iface
     - revive
-    - err113
-    - godoclint
 
 formatters:
   # Enable specific formatter.
@@ -26,7 +24,6 @@ formatters:
     - gofmt
     - gofumpt
     - goimports
-    # - golines
     - swaggo
 
 run:
