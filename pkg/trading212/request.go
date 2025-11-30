@@ -32,8 +32,12 @@ func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Rea
 	endpoint := fmt.Sprintf("https://%s/%s", api.domain, path)
 
 	ctx := context.Background()
-	ctx, _ = context.WithTimeoutCause(ctx, api.client.Timeout, errors.New("request timeout"))
-	ctx, cancel := context.WithCancelCause(ctx)
+	ctx, timeoutCancel := context.WithTimeoutCause(ctx, api.client.Timeout, errors.New("request timeout"))
+	ctx, causeCancel := context.WithCancelCause(ctx)
+	cancel := func(cause error) {
+		timeoutCancel()
+		causeCancel(cause)
+	}
 
 	request, err := http.NewRequestWithContext(ctx, method, endpoint, body)
 	if err != nil {
