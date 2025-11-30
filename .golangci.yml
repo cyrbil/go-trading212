@@ -16,6 +16,8 @@ linters:
     - iface
     - revive
     - golines
+    - err113
+    - godoclint
 
 formatters:
   # Enable specific formatter.
