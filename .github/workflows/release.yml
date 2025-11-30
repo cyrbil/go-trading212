@@ -1,0 +1,49 @@
+---
+
+name: "Release workflow"
+
+on:
+  push:
+    branches:
+      - "main"
+
+permissions:
+  contents: "write"  # for tag
+
+jobs:
+  release:
+    name: "Release ${{ github.event_name }}"
+    environment: "Release"
+    runs-on: [ "ubuntu-latest" ]
+    steps:
+      - name: "Checkout Code"
+        uses: "actions/checkout@v6.0.0"
+        with:
+          fetch-depth: 0
+
+      - name: "Import GPG key"
+        uses: "crazy-max/ghaction-import-gpg@v6"
+        with:
+          gpg_private_key: "${{ secrets.RELEASER_GPG_KEY }}"
+          passphrase: "${{ secrets.RELEASER_GPG_PASSPHRASE }}"
+          git_user_signingkey: true
+          git_tag_gpgsign: true
+          git_config_global: true
+
+      - name: "Find next version"
+        id: "semver"
+        uses: "anothrNick/github-tag-action@1.75.0"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          TAG_PREFIX: "v"
+          DRY_RUN: "true"
+          RELEASE_BRANCHES: "main"
+          DEFAULT_BUMP: "patch"
+
+      - name: "Release tag"
+        shell: "bash"
+        run: |
+          git tag \
+              -s "${{ steps.semver.outputs.new_tag }}" \
+              -m "Release ${{ steps.semver.outputs.new_tag }}"
+          git push origin tag "${{ steps.semver.outputs.new_tag }}"

@@ -2,10 +2,11 @@ package trading212
 
 type APIEndpoint string
 
-const version APIEndpoint = "api/v0"
+const version APIEndpoint = "/api/v0"
 
 const endpointBase = version + "/equity"
 
+//nolint:godoclint,godot
 //goland:noinspection GoCommentStart
 const (
 	// Account
