@@ -68,7 +68,7 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 
 	// detect paginated results
 	var paginatedResponse paginatedResponse
-	decoder := json.NewDecoder(bytes.NewBuffer(*r.raw)) //nolint:wsl
+	decoder := json.NewDecoder(bytes.NewBuffer(*r.raw)) //nolint:wsl,wsl_v5
 	decoder.DisallowUnknownFields()
 
 	err = decoder.Decode(&paginatedResponse)
@@ -80,7 +80,7 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 
 	// decode current array
 	var data []T
-	decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items)) //nolint:wsl
+	decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items)) //nolint:wsl,wsl_v5
 	decoder.DisallowUnknownFields()
 
 	err = decoder.Decode(&data)
