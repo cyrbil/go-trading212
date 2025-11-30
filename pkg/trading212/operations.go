@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-)
 
-import (
 	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
@@ -20,6 +18,7 @@ func (b jsonBody) Read(buf []byte) (int, error) {
 		return 0, errors.Join(errors.New("error converting request body"), err)
 	}
 
+	//lint:wrapcheck  // no need to wrap this
 	return bytes.NewReader(jsonData).Read(buf)
 }
 

@@ -50,10 +50,12 @@ func (r *Response[T]) Object() (*T, error) {
 
 	next, stop := iter.Pull(iterator)
 	defer stop()
+
 	value, ok := next()
 	if !ok {
 		return nil, errors.New("no value returned from iterator")
 	}
+	
 	return &value, nil
 }
 

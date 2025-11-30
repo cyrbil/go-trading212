@@ -10,6 +10,11 @@ linters:
   # - `fast`: enables only linters considered as "fast" (`golangci-lint help linters --json | jq '[ .[] | select(.fast==true) ] | map(.name)'`).
   # Default: standard
   default: all
+  # Disable specific linters.
+  disable:
+    - depguard
+    - iface
+    - revive
 
 formatters:
   # Enable specific formatter.

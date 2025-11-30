@@ -3,10 +3,8 @@ package trading212
 import (
 	"net/http"
 	"time"
-)
 
-import (
-	"github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
 const defaultTimeout = 5 * time.Second
@@ -24,7 +22,7 @@ type API struct {
 	domain     APIDomain
 	apiKey     string
 	apiSecret  SecureString
-	rateLimits map[string]trading212.APIRateLimits
+	rateLimits map[string]internal.APIRateLimits
 
 	client http.Client
 }
@@ -42,7 +40,7 @@ func NewAPI(domain APIDomain, apiKey string, apiSecret SecureString) *API {
 		domain:     domain,
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
-		rateLimits: make(map[string]trading212.APIRateLimits),
+		rateLimits: make(map[string]internal.APIRateLimits),
 		client: http.Client{
 			Transport:     nil,
 			CheckRedirect: nil,

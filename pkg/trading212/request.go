@@ -16,6 +16,7 @@ import (
 )
 
 type Request struct {
+	//nolint:containedctx
 	Ctx         context.Context
 	cancel      context.CancelCauseFunc
 	api         *API
@@ -39,6 +40,7 @@ func (api *API) NewRequest(method string, path trading212.APIEndpoint, body io.R
 	request, err := http.NewRequestWithContext(ctx, method, endpoint, body)
 	if err != nil {
 		cancel(err)
+
 		return nil, err
 	}
 
@@ -61,10 +63,12 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	rateLimitPath := request.httpRequest.URL.EscapedPath()
 	trading212.ApplyRateLimit(rateLimitPath, request.api.rateLimits)
 
+	//nolint:bodyclose // body is closed in lambda
 	response, err := request.api.client.Do(request.httpRequest)
 	if err != nil {
 		err := errors.Join(errors.New("error executing api request"), err)
 		request.cancel(err)
+
 		return nil, err
 	}
 	defer func(Body io.ReadCloser) {
@@ -86,7 +90,9 @@ func (request *Request) Do() (*json.RawMessage, error) {
 
 	if response.StatusCode == trading212.RateLimitedErrorCode {
 		time.Sleep(time.Duration(request.retries) * time.Second)
+
 		request.retries++
+
 		return request.Do()
 	}
 
@@ -102,6 +108,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 		request.cancel(err)
 		return nil, err
 	}
+	
 	slog.Debug("Response body", "body", data)
 
 	return (*json.RawMessage)(&data), nil
