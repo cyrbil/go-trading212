@@ -3,11 +3,21 @@
 [![Go Reference][go-reference-badge]][go-reference]
 [![License][license-badge]][license]
 [![Go Version][go-version-badge]][go-version]
-[![Build Status][build-badge]][build]
-[![Coverage][coverage-badge]][coverage]
 [![coded-by-badge][coded-by-badge]][repo-commits]
 
-A comprehensive Go client library for interacting with the Trading212 REST API.
+[![Release Status][release-badge]][release]
+[![Coverage Status][coverage-badge]][coverage]
+[![Testing Status][testing-badge]][testing]
+
+[coverage]: https://github.com/cyrbil/go-trading212/actions/workflows/coverage.yml
+[coverage-badge]: https://raw.githubusercontent.com/cyrbil/go-trading212/badges/.badges/main/coverage.svg?branch=main&event=push
+[testing]: https://github.com/cyrbil/go-trading212/actions/workflows/testing.yml
+[testing-badge]: https://github.com/cyrbil/go-trading212/actions/workflows/testing.yml/badge.svg?branch=main&event=schedule
+[release]: https://github.com/cyrbil/go-trading212/actions/workflows/release.yml
+[release-badge]: https://github.com/cyrbil/go-trading212/actions/workflows/release.yml/badge.svg?branch=main&event=push
+
+
+A comprehensive Go client library for interacting with the [Trading212 Rest API][trading212-docs].
 This library provides a type-safe, idiomatic Go interface for managing your Trading212 account, 
 placing orders, monitoring positions, and accessing historical trading data.
 
@@ -178,12 +188,13 @@ if err != nil {
 
 ## Rate Limiting
 
-The library includes built-in rate limiting support. Rate limits are automatically tracked per endpoint to ensure compliance with Trading212 API constraints.
+The library includes built-in rate limiting support.
+Rate limits are automatically tracked per endpoint to ensure compliance with Trading212 API constraints.
 
 
 ## Requirements
 
-- Go 1.18 or higher
+- Go 1.23 or higher
 - A Trading212 account with API access enabled
 - Valid API key and secret
 
@@ -206,28 +217,15 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## Disclaimer
 
-This library is not affiliated with, endorsed by, or sponsored by Trading212. Use at your own risk. Trading involves substantial risk of loss. Past performance is not indicative of future results.
-
-
-## Support
-
-- 📖 [Trading212 API Documentation][trading212-docs]
-- 🐛 [Issue Tracker][issues]
-- 💬 [Discussions][discussions]
+This library is not affiliated with, endorsed by, or sponsored by Trading212. Use at your own risk. 
 
 
 [go-reference-badge]: https://pkg.go.dev/badge/github.com/cyrbil/go-trading212.svg
 [go-reference]: https://pkg.go.dev/github.com/cyrbil/go-trading212
 [license-badge]: https://img.shields.io/badge/license-GPLv3-blue.svg
-[license]: LICENSE
-[go-version-badge]: https://img.shields.io/badge/go-1.18+-00ADD8.svg
+[license]: ./LICENSE
+[go-version-badge]: https://img.shields.io/badge/go-1.23+-00ADD8.svg
 [go-version]: https://golang.org
-[build-badge]: https://img.shields.io/github/actions/workflow/status/cyrbil/go-trading212/ci.yml
-[build]: https://github.com/cyrbil/go-trading212/actions
-[coverage-badge]: https://img.shields.io/codecov/c/github/cyrbil/go-trading212
-[coverage]: https://codecov.io/gh/cyrbil/go-trading212
 [trading212-docs]: https://docs.trading212.com/api
-[issues]: https://github.com/cyrbil/go-trading212/issues
-[discussions]: https://github.com/cyrbil/go-trading212/discussions
 [coded-by-badge]: https://img.shields.io/badge/coded%20by-humans%20%F0%9F%92%96-blue?style=social
 [repo-commits]: https://github.com/cyrbil/go-trading212/commits/main/

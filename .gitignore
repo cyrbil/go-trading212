@@ -4,12 +4,14 @@
 # But not these files everywhere...
 !**/.gitattributes
 !**/.gitignore
+!**/.github
 !**/README.md
 !**/LICENSE
 
 # Or these specific files
 !go.mod
 !go.sum
+!.golangci.yml
 
 # And not these folders
 !api/

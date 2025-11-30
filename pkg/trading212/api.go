@@ -1,48 +1,84 @@
 package trading212
 
 import (
+	"errors"
 	"net/http"
+	"net/url"
 	"time"
+
+	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
-import (
-	"github.com/cyrbil/go-trading212/internal/pkg/trading212"
-)
+const defaultTimeout = 5 * time.Second
 
-type APIDomain string
+type APIURL string
 
-//goland:noinspection GoUnusedConst
 const (
-	APIDomainDemo APIDomain = "demo.trading212.com"
-	APIDomainLive APIDomain = "live.trading212.com"  // gitleaks:allow # false positive
+	APIURLDemo APIURL = "https://demo.trading212.com"
+	APIURLLive APIURL = "https://live.trading212.com"  // gitleaks:allow # false positive
+)
+
+var (
+	errEmptyDomain    = errors.New("domain should not be empty")
+	errInvalidDomain  = errors.New("domain be a valid url")
+	errEmptyApiKey    = errors.New("API key should not be empty")
+	errEmptyApiSecret = errors.New("API secret should not be empty")
 )
 
 type API struct {
-	domain     APIDomain
+	*operations
+
+	domain     *url.URL
 	apiKey     string
 	apiSecret  SecureString
-	rateLimits map[string]trading212.APIRateLimits
+	rateLimits map[string]internal.APIRateLimits
 
-	client http.Client
-
-	operations
+	client *http.Client
 }
 
-func NewAPILive(apiKey string, apiSecret SecureString) *API {
-	return NewAPI(APIDomainLive, apiKey, apiSecret)
+func NewAPILive(apiKey string, apiSecret SecureString) (*API, error) {
+	return NewAPI(APIURLLive, apiKey, apiSecret)
 }
 
-func NewAPIDemo(apiKey string, apiSecret SecureString) *API {
-	return NewAPI(APIDomainDemo, apiKey, apiSecret)
+func NewAPIDemo(apiKey string, apiSecret SecureString) (*API, error) {
+	return NewAPI(APIURLDemo, apiKey, apiSecret)
 }
 
-func NewAPI(domain APIDomain, apiKey string, apiSecret SecureString) *API {
+func NewAPI(apiUrl APIURL, apiKey string, apiSecret SecureString) (*API, error) {
+	if apiUrl == "" {
+		return nil, errEmptyDomain
+	}
+	if apiKey == "" {
+		return nil, errEmptyApiKey
+	}
+	if apiSecret == "" {
+		return nil, errEmptyApiSecret
+	}
+
+	domainUrl, err := url.Parse(string(apiUrl))
+	if err != nil {
+		return nil, errors.Join(errInvalidDomain, err)
+	}
+
 	api := &API{
-		domain:     domain,
+		domain:     domainUrl,
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
-		rateLimits: make(map[string]trading212.APIRateLimits),
-		client:     http.Client{Timeout: 5 * time.Second},
+		rateLimits: make(map[string]internal.APIRateLimits),
+		client: &http.Client{
+			Transport:     nil,
+			CheckRedirect: nil,
+			Jar:           nil,
+			Timeout:       defaultTimeout,
+		},
+		operations: &operations{
+			Account:          nil,
+			Instruments:      nil,
+			Orders:           nil,
+			Positions:        nil,
+			HistoricalEvents: nil,
+			Pies:             nil,
+		},
 	}
 
 	api.Account = &account{api}
@@ -52,5 +88,5 @@ func NewAPI(domain APIDomain, apiKey string, apiSecret SecureString) *API {
 	api.HistoricalEvents = &historicalEvents{api}
 	api.Pies = &pies{api}
 
-	return api
+	return api, nil
 }

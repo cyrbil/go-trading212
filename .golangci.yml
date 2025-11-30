@@ -1,0 +1,33 @@
+# See the dedicated "version" documentation section.
+version: "2"
+
+linters:
+  # Default set of linters.
+  # The value can be:
+  # - `standard`: https://golangci-lint.run/docs/linters/#enabled-by-default
+  # - `all`: enables all linters by default.
+  # - `none`: disables all linters by default.
+  # - `fast`: enables only linters considered as "fast" (`golangci-lint help linters --json | jq '[ .[] | select(.fast==true) ] | map(.name)'`).
+  # Default: standard
+  default: all
+  # Disable specific linters.
+  disable:
+    - depguard
+    - iface
+    - revive
+
+formatters:
+  # Enable specific formatter.
+  # Default: [] (uses standard Go formatting)
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - swaggo
+
+run:
+  # Timeout for total work, e.g. 30s, 5m, 5m30s.
+  # If the value is lower or equal to 0, the timeout is disabled.
+  # Default: 0 (disabled)
+  timeout: 5m
