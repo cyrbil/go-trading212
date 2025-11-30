@@ -5,8 +5,11 @@
 [![Go Version][go-version-badge]][go-version]
 [![Build Status][build-badge]][build]
 [![Coverage][coverage-badge]][coverage]
+[![coded-by-badge][coded-by-badge]][repo-commits]
 
-A comprehensive Go client library for interacting with the Trading212 REST API. This library provides a type-safe, idiomatic Go interface for managing your Trading212 account, placing orders, monitoring positions, and accessing historical trading data.
+A comprehensive Go client library for interacting with the Trading212 REST API.
+This library provides a type-safe, idiomatic Go interface for managing your Trading212 account, 
+placing orders, monitoring positions, and accessing historical trading data.
 
 
 ## Features
@@ -47,15 +50,13 @@ import (
 
 func main() {
     // Initialize the API client
-    // Use APIDomainDemo for demo accounts or APIDomainLive for live trading
-    api := trading212.NewAPI(
-        trading212.APIDomainDemo,
+    api := trading212.NewAPILive(
         "your-api-key",
-        trading212.SecureString("your-api-secret"),
+        "your-api-secret",
     )
     
     // Get account summary
-    summary, err := api.Account().GetAccountSummary()
+    summary, err := api.Account.GetAccountSummary()
     if err != nil {
         log.Fatal(err)
     }
@@ -72,7 +73,7 @@ func main() {
 
 ```go
 // Retrieve all open positions
-positions, err := api.Positions().GetAllPositions()
+positions, err := api.Positions.GetAllPositions()
 if err != nil {
     log.Fatal(err)
 }
@@ -130,7 +131,7 @@ The library is organized into logical operation groups:
 
 ### API Domains
 
-The library supports both demo and live Trading212 environments:
+The library also supports demo or any trading212 environments:
 
 ```go
 // Demo environment (for testing)
@@ -140,9 +141,9 @@ api := trading212.NewAPI(
     apiSecret,
 )
 
-// Live environment (for real trading)
+// Custom environment
 api := trading212.NewAPI(
-    trading212.APIDomainLive,
+    trading212.APIDomain("api.domain"),
     apiKey,
     apiSecret,
 )
@@ -228,4 +229,5 @@ This library is not affiliated with, endorsed by, or sponsored by Trading212. Us
 [trading212-docs]: https://docs.trading212.com/api
 [issues]: https://github.com/cyrbil/go-trading212/issues
 [discussions]: https://github.com/cyrbil/go-trading212/discussions
-
+[coded-by-badge]: https://img.shields.io/badge/coded%20by-humans%20%F0%9F%92%96-blue?style=social
+[repo-commits]: https://github.com/cyrbil/go-trading212/commits/main/
