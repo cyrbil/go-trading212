@@ -38,7 +38,9 @@ func (api *API) NewRequest(method string, path trading212.APIEndpoint, body io.R
 	// api accepts json
 	request.Header.Set("Content-Type", "application/json")
 	// extend default pagination from 20 to 50 when available
-	request.URL.Query().Set("limit", "50")
+	query := request.URL.Query()
+	query.Set("limit", "50")
+	request.URL.RawQuery = query.Encode()
 
 	return &Request{api, request, 0}, nil
 }

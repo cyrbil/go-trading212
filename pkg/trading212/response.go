@@ -96,7 +96,10 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 			return
 		}
 
-		r.request.httpRequest.URL.Query().Set("cursor", *paginatedResponse.NextPagePath)
+		query := r.request.httpRequest.URL.Query()
+		query.Set("cursor", *paginatedResponse.NextPagePath)
+		r.request.httpRequest.URL.RawQuery = query.Encode()
+
 		data, err := r.request.Do()
 		if err != nil {
 			return
