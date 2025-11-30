@@ -25,17 +25,21 @@ func (r *Response[T]) validate() error {
 	if r.err != nil {
 		return r.err
 	}
+
 	if r.request == nil {
 		return errors.New("request is nil")
 	}
+
 	if r.raw == nil {
 		return errors.New("response is empty")
 	}
+
 	return nil
 }
 
 func (r *Response[T]) Object() (*T, error) {
-	if err := r.validate(); err != nil {
+	err := r.validate()
+	if err != nil {
 		return nil, err
 	}
 
@@ -54,7 +58,8 @@ func (r *Response[T]) Object() (*T, error) {
 }
 
 func (r *Response[T]) Items() (iter.Seq[T], error) {
-	if err := r.validate(); err != nil {
+	err := r.validate()
+	if err != nil {
 		return nil, err
 	}
 
@@ -62,7 +67,8 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 	var paginatedResponse paginatedResponse
 	decoder := json.NewDecoder(bytes.NewBuffer(*r.raw))
 	decoder.DisallowUnknownFields()
-	err := decoder.Decode(&paginatedResponse)
+
+	err = decoder.Decode(&paginatedResponse)
 	if err != nil {
 		// assume data is array, but use like paginated
 		paginatedResponse.Items = r.raw
@@ -73,11 +79,13 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 	var data []T
 	decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items))
 	decoder.DisallowUnknownFields()
+
 	err = decoder.Decode(&data)
 	if err != nil {
 		var value T
 		decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items))
 		decoder.DisallowUnknownFields()
+		
 		err = decoder.Decode(&value)
 		if err != nil {
 			return nil, err
@@ -105,19 +113,22 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 			return
 		}
 
-		response := &Response[T]{request: r.request, raw: data}
+		response := &Response[T]{request: r.request, raw: data, err: nil}
 
 		nextIterator, err := response.Items()
 		if err != nil {
 			return
 		}
+
 		next, stop := iter.Pull(nextIterator)
 		defer stop()
+
 		for {
 			value, ok := next()
 			if !ok {
 				return
 			}
+
 			if !yield(value) {
 				return
 			}

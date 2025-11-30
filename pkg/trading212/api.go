@@ -11,21 +11,20 @@ import (
 
 type APIDomain string
 
-//goland:noinspection GoUnusedConst
 const (
 	APIDomainDemo APIDomain = "demo.trading212.com"
 	APIDomainLive APIDomain = "live.trading212.com"
 )
 
 type API struct {
+	operations
+
 	domain     APIDomain
 	apiKey     string
 	apiSecret  SecureString
 	rateLimits map[string]trading212.APIRateLimits
 
 	client http.Client
-
-	operations
 }
 
 func NewAPILive(apiKey string, apiSecret SecureString) *API {
@@ -38,11 +37,17 @@ func NewAPIDemo(apiKey string, apiSecret SecureString) *API {
 
 func NewAPI(domain APIDomain, apiKey string, apiSecret SecureString) *API {
 	api := &API{
+		operations: operations{},
 		domain:     domain,
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
 		rateLimits: make(map[string]trading212.APIRateLimits),
-		client:     http.Client{Timeout: 5 * time.Second},
+		client: http.Client{
+			Transport:     nil,
+			CheckRedirect: nil,
+			Jar:           nil,
+			Timeout:       5 * time.Second,
+		},
 	}
 
 	api.Account = &account{api}

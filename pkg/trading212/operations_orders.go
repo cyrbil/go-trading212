@@ -115,10 +115,12 @@ func (op *orders) PlaceStopLimitOrder(req models.StopLimitOrderRequest) (*models
 
 func (op *orders) CancelOrder(id int64) (*models.Empty, error) {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.CancelOrder, id))
+
 	return runOperation[models.Empty](op.api, http.MethodDelete, endpoint, nil).Object()
 }
 
 func (op *orders) GetPendingOrderByID(id int64) (*models.Order, error) {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.GetPendingOrderByID, id))
+
 	return runOperation[models.Order](op.api, http.MethodGet, endpoint, nil).Object()
 }
