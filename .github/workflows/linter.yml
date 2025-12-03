@@ -1,0 +1,50 @@
+---
+
+name: "PR linter"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+
+permissions:
+  contents: "read"
+  pull-requests: "write"  # for comment
+
+jobs:
+  Linter:
+    runs-on: [ "ubuntu-latest" ]
+    steps:
+      # Checkout code
+      - name: "Checkout project"
+        uses: "actions/checkout@v6.0.0"
+
+      # Run linter
+      - name: "Run static analysis"
+        id: linter
+        uses: "oxsecurity/megalinter@v8"
+        continue-on-error: true
+        env:
+          SARIF_REPORTER: "true"
+
+      # Upload linter artifacts
+      - name: "Archive linter artifacts"
+        uses: "actions/upload-artifact@v4"
+        with:
+          name: "linter reports"
+          include-hidden-files: "true"
+          path: |
+            megalinter-reports
+            mega-linter.log
+
+      # Send results to PR
+      - name: "Upload MegaLinter scan results to GitHub"
+        uses: "github/codeql-action/upload-sarif@v4"
+        with:
+          sarif_file: "megalinter-reports/megalinter-report.sarif"
+
+      # Assert coverage passes threshold
+      - name: "Validate coverage passes threshold"
+        if: "steps.linter.outcome == 'failure'"
+        shell: "bash"
+        run: "echo 'Linter return issues' && exit 1"

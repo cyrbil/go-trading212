@@ -12,21 +12,21 @@ type operationGetPaidOutDividends interface {
 	// GetPaidOutDividends operation.
 	// Get paid out dividends.
 	// See: https://docs.trading212.com/api/historical-events/dividends
-	GetPaidOutDividends() (iter.Seq[models.Dividend], error)
+	GetPaidOutDividends() (iter.Seq[*models.Dividend], error)
 }
 
 type operationGetHistoricalOrders interface {
 	// GetHistoricalOrders operation.
 	// Get historical orders data.
 	// See: https://docs.trading212.com/api/historical-events/orders_1
-	GetHistoricalOrders() (iter.Seq[models.OrderFill], error)
+	GetHistoricalOrders() (iter.Seq[*models.OrderFill], error)
 }
 
 type operationGetTransactions interface {
 	// GetTransactions operation.
 	// Fetch superficial information about movements to and from your account.
 	// See: https://docs.trading212.com/api/historical-events/transactions
-	GetTransactions() (iter.Seq[models.Transaction], error)
+	GetTransactions() (iter.Seq[*models.Transaction], error)
 }
 
 type operationListReports interface {
@@ -39,7 +39,7 @@ type operationListReports interface {
 	//   - Once the status is Finished, the downloadLink field will contain a URL to download the CSV file.
 	//
 	// See: https://docs.trading212.com/api/historical-events/getreports
-	ListReports() (iter.Seq[models.Report], error)
+	ListReports() (iter.Seq[*models.Report], error)
 }
 
 type operationRequestReport interface {
@@ -64,22 +64,22 @@ type historicalEvents struct {
 	api requestMaker
 }
 
-func (op *historicalEvents) GetPaidOutDividends() (iter.Seq[models.Dividend], error) {
+func (op *historicalEvents) GetPaidOutDividends() (iter.Seq[*models.Dividend], error) {
 	return runOperation[models.Dividend](op.api, http.MethodGet, internal.GetDividends, nil).Items()
 }
 
-func (op *historicalEvents) GetHistoricalOrders() (iter.Seq[models.OrderFill], error) {
+func (op *historicalEvents) GetHistoricalOrders() (iter.Seq[*models.OrderFill], error) {
 	return runOperation[models.OrderFill](op.api, http.MethodGet, internal.GetHistoricalOrders, nil).Items()
 }
 
-func (op *historicalEvents) GetTransactions() (iter.Seq[models.Transaction], error) {
+func (op *historicalEvents) GetTransactions() (iter.Seq[*models.Transaction], error) {
 	return runOperation[models.Transaction](op.api, http.MethodGet, internal.GetTransactions, nil).Items()
 }
 
-func (op *historicalEvents) ListReports() (iter.Seq[models.Report], error) {
+func (op *historicalEvents) ListReports() (iter.Seq[*models.Report], error) {
 	return runOperation[models.Report](op.api, http.MethodGet, internal.ListReports, nil).Items()
 }
 
 func (op *historicalEvents) RequestReport(req models.ReportRequest) (*models.ReportId, error) {
-	return runOperation[models.ReportId](op.api, http.MethodPost, internal.RequestReport, jsonBody{req}).Object()
+	return runOperation[models.ReportId](op.api, http.MethodPost, internal.RequestReport, req).Object()
 }
