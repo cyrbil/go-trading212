@@ -13,7 +13,7 @@ type operationFetchAllPies interface {
 	// FetchAllPies operation.
 	// Fetches all pies for the account.
 	// See: https://docs.trading212.com/api/pies-(deprecated)/getall
-	FetchAllPies() (iter.Seq[models.PieSummary], error)
+	FetchAllPies() (iter.Seq[*models.PieSummary], error)
 }
 
 type operationCreatePie interface {
@@ -64,7 +64,7 @@ type pies struct {
 	api requestMaker
 }
 
-func (op *pies) FetchAllPies() (iter.Seq[models.PieSummary], error) {
+func (op *pies) FetchAllPies() (iter.Seq[*models.PieSummary], error) {
 	return runOperation[models.PieSummary](op.api, http.MethodGet, internal.GetAllPies, nil).Items()
 }
 

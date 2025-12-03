@@ -177,12 +177,13 @@ if err != nil {
 
 ## Rate Limiting
 
-The library includes built-in rate limiting support. Rate limits are automatically tracked per endpoint to ensure compliance with Trading212 API constraints.
+The library includes built-in rate limiting support.
+Rate limits are automatically tracked per endpoint to ensure compliance with Trading212 API constraints.
 
 
 ## Requirements
 
-- Go 1.18 or higher
+- Go 1.23 or higher
 - A Trading212 account with API access enabled
 - Valid API key and secret
 
@@ -211,7 +212,7 @@ This library is not affiliated with, endorsed by, or sponsored by Trading212. Us
 [go-reference-badge]: https://pkg.go.dev/badge/github.com/cyrbil/go-trading212.svg
 [go-reference]: https://pkg.go.dev/github.com/cyrbil/go-trading212
 [license-badge]: https://img.shields.io/badge/license-GPLv3-blue.svg
-[license]: LICENSE
+[license]: ./LICENSE
 [go-version-badge]: https://img.shields.io/badge/go-1.23+-00ADD8.svg
 [go-version]: https://golang.org
 [build-badge]: https://github.com/cyrbil/go-trading212/actions/workflows/go-build.yml/badge.svg

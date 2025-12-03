@@ -14,7 +14,7 @@ type operationGetAllPendingOrders interface {
 	// Retrieves a list of all orders that are currently active (i.e., not yet filled, cancelled, or expired).
 	// This is useful for monitoring the status of your open positions and managing your trading strategy.
 	// See: https://docs.trading212.com/api/orders/orders
-	GetAllPendingOrders() (iter.Seq[models.Order], error)
+	GetAllPendingOrders() (iter.Seq[*models.Order], error)
 }
 
 type operationPlaceLimitOrder interface {
@@ -23,7 +23,7 @@ type operationPlaceLimitOrder interface {
 	// To place a buy order, use a positive quantity. The order will fill at the limitPrice or lower.
 	// To place a sell order, use a negative quantity. The order will fill at the limitPrice or higher.
 	// See: https://docs.trading212.com/api/orders/placelimitorder
-	PlaceLimitOrder(req *models.LimitOrderRequest) (*models.Order, error)
+	PlaceLimitOrder(req models.LimitOrderRequest) (*models.Order, error)
 }
 
 type operationPlaceMarketOrder interface {
@@ -34,7 +34,7 @@ type operationPlaceMarketOrder interface {
 	// extendedHours: Set to true to allow the order to be filled outside the standard trading session.
 	// If placed when the market is closed, the order will be queued to execute when the market next opens.
 	// See: https://docs.trading212.com/api/orders/placemarketorder
-	PlaceMarketOrder(req *models.MarketOrderRequest) (*models.Order, error)
+	PlaceMarketOrder(req models.MarketOrderRequest) (*models.Order, error)
 }
 
 type operationPlaceStopOrder interface {
@@ -44,7 +44,7 @@ type operationPlaceStopOrder interface {
 	// To place a sell stop order (commonly a 'stop-loss'), use a negative quantity.
 	// The stopPrice is triggered by the instrument's Last Traded Price (LTP).
 	// See: https://docs.trading212.com/api/orders/placestoporder_1
-	PlaceStopOrder(req *models.StopOrderRequest) (*models.Order, error)
+	PlaceStopOrder(req models.StopOrderRequest) (*models.Order, error)
 }
 
 type operationPlaceStopLimitOrder interface {
@@ -66,7 +66,7 @@ type operationCancelOrder interface {
 	// is not guaranteed if the order is already in the process of being filled. A
 	// successful response indicates the cancellation request was accepted.
 	// See: https://docs.trading212.com/api/orders/cancelorder
-	CancelOrder(id int64) (*models.Empty, error)
+	CancelOrder(id int64) error
 }
 
 type operationGetPendingOrderByID interface {
@@ -91,30 +91,30 @@ type orders struct {
 	api requestMaker
 }
 
-func (op *orders) GetAllPendingOrders() (iter.Seq[models.Order], error) {
+func (op *orders) GetAllPendingOrders() (iter.Seq[*models.Order], error) {
 	return runOperation[models.Order](op.api, http.MethodGet, internal.GetAllPendingOrders, nil).Items()
 }
 
-func (op *orders) PlaceLimitOrder(req *models.LimitOrderRequest) (*models.Order, error) {
+func (op *orders) PlaceLimitOrder(req models.LimitOrderRequest) (*models.Order, error) {
 	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceLimitOrder, req).Object()
 }
 
-func (op *orders) PlaceMarketOrder(req *models.MarketOrderRequest) (*models.Order, error) {
-	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceMarketOrder, jsonBody{req}).Object()
+func (op *orders) PlaceMarketOrder(req models.MarketOrderRequest) (*models.Order, error) {
+	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceMarketOrder, req).Object()
 }
 
-func (op *orders) PlaceStopOrder(req *models.StopOrderRequest) (*models.Order, error) {
-	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceStopOrder, jsonBody{req}).Object()
+func (op *orders) PlaceStopOrder(req models.StopOrderRequest) (*models.Order, error) {
+	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceStopOrder, req).Object()
 }
 
 func (op *orders) PlaceStopLimitOrder(req models.StopLimitOrderRequest) (*models.Order, error) {
-	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceStopLimitOrder, jsonBody{req}).Object()
+	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceStopLimitOrder, req).Object()
 }
 
-func (op *orders) CancelOrder(id int64) (*models.Empty, error) {
+func (op *orders) CancelOrder(id int64) error {
 	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.CancelOrder, id))
 
-	return runOperation[models.Empty](op.api, http.MethodDelete, endpoint, nil).Object()
+	return runOperation[models.Empty](op.api, http.MethodDelete, endpoint, nil).err
 }
 
 func (op *orders) GetPendingOrderByID(id int64) (*models.Order, error) {

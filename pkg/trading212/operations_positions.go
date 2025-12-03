@@ -12,13 +12,13 @@ type positionsOperations interface {
 	// GetAllPositions operation.
 	// Fetch all open positions for your account.
 	// See: https://docs.trading212.com/api/positions/getpositions
-	GetAllPositions() (iter.Seq[models.Position], error)
+	GetAllPositions() (iter.Seq[*models.Position], error)
 }
 
 type positions struct {
 	api requestMaker
 }
 
-func (op *positions) GetAllPositions() (iter.Seq[models.Position], error) {
+func (op *positions) GetAllPositions() (iter.Seq[*models.Position], error) {
 	return runOperation[models.Position](op.api, http.MethodGet, internal.GetAllPositions, nil).Items()
 }

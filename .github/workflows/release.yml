@@ -1,0 +1,40 @@
+---
+
+name: "PR linter"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+    types:
+      - "closed"
+
+permissions:
+  contents: "read"
+  pull-requests: "write"  # for comment
+
+jobs:
+  Release:
+    if: "github.event.pull_request.merged"
+    environment: "Release"
+    runs-on: [ "ubuntu-latest" ]
+    steps:
+      - name: "Checkout Code"
+        uses: "actions/checkout@v6.0.0"
+        with:
+          ref: "${{ github.event.pull_request.merge_commit_sha }}"
+          fetch-depth: 0
+
+      - name: "Import GPG key"
+        uses: "crazy-max/ghaction-import-gpg@v6"
+        with:
+          gpg_private_key: "${{ secrets.RELEASER_GPG_KEY }}"
+          passphrase: "${{ secrets.RELEASER_GPG_PASSPHRASE }}"
+          git_user_signingkey: true
+          git_tag_gpgsign: true
+
+      - name: "Find next version"
+        uses: "anothrNick/github-tag-action@v1.75.0"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          TAG_PREFIX: "v"
