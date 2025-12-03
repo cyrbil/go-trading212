@@ -10,7 +10,18 @@ import (
 	"time"
 )
 
-const RateLimitedErrorCode = 429
+const (
+	// RateLimitHeaderLimit x-ratelimit-limit: The total number of requests allowed in the current time period.
+	RateLimitHeaderLimit = "x-ratelimit-limit"
+	// RateLimitHeaderPeriod x-ratelimit-period: The duration of the time period in seconds.
+	RateLimitHeaderPeriod = "x-ratelimit-period"
+	// RateLimitHeaderRemaining x-ratelimit-remaining: The number of requests you have left in the current period.
+	RateLimitHeaderRemaining = "x-ratelimit-remaining"
+	// RateLimitHeaderReset x-ratelimit-reset: A Unix timestamp indicating the exact time when the limit will be fully reset.
+	RateLimitHeaderReset = "x-ratelimit-reset"
+	// RateLimitHeaderUsed x-ratelimit-used: The number of requests you have already made in the current period.
+	RateLimitHeaderUsed = "x-ratelimit-used"
+)
 
 var (
 	errHeaderNotFound   = errors.New("header not found")
@@ -40,18 +51,15 @@ type APIRateLimits struct {
 
 // ParseRateLimits parses the http response rate limit headers.
 func ParseRateLimits(response *http.Response) (*APIRateLimits, error) {
-	prefix := "x-ratelimit"
 	headers := map[string]uint64{
-		"limit":     0,
-		"period":    0,
-		"remaining": 0,
-		"reset":     0,
-		"used":      0,
+		RateLimitHeaderLimit:     0,
+		RateLimitHeaderPeriod:    0,
+		RateLimitHeaderRemaining: 0,
+		RateLimitHeaderReset:     0,
+		RateLimitHeaderUsed:      0,
 	}
 
-	for key := range headers {
-		header := fmt.Sprintf("%s-%s", prefix, key)
-
+	for header := range headers {
 		str := response.Header.Get(header)
 		if str == "" {
 			return nil, headerNotFoundError(header)
@@ -62,23 +70,23 @@ func ParseRateLimits(response *http.Response) (*APIRateLimits, error) {
 			return nil, headerConversionError(header, str)
 		}
 
-		headers[key] = value
+		headers[header] = value
 	}
 
-	if headers["period"] > math.MaxInt64 {
+	if headers[RateLimitHeaderPeriod] > math.MaxInt64 {
 		return nil, errHeaderConversion
 	}
 
-	if headers["reset"] > math.MaxInt64 {
+	if headers[RateLimitHeaderReset] > math.MaxInt64 {
 		return nil, errHeaderConversion
 	}
 
 	rateLimits := &APIRateLimits{
-		Limit:     headers["limit"],
-		Period:    time.Duration(headers["period"]) * time.Second, //nolint:gosec
-		Remaining: headers["remaining"],
-		Reset:     time.Unix(int64(headers["reset"]), 0), //nolint:gosec
-		Used:      headers["used"],
+		Limit:     headers[RateLimitHeaderLimit],
+		Period:    time.Duration(headers[RateLimitHeaderPeriod]) * time.Second, //nolint:gosec
+		Remaining: headers[RateLimitHeaderRemaining],
+		Reset:     time.Unix(int64(headers[RateLimitHeaderReset]), 0), //nolint:gosec
+		Used:      headers[RateLimitHeaderUsed],
 	}
 
 	return rateLimits, nil

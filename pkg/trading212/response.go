@@ -18,7 +18,7 @@ var (
 // (object, array or paginated array). Implement detection/parsing in a follow-up change.
 type Response[T any] struct {
 	err     error
-	request *Request
+	request IRequest
 	raw     *json.RawMessage
 }
 
@@ -63,11 +63,11 @@ func (r *Response[T]) Object() (*T, error) {
 		return nil, errEmptyIter
 	}
 
-	return &value, nil
+	return value, nil
 }
 
 //nolint:cyclop,funlen  // TODO: too complex
-func (r *Response[T]) Items() (iter.Seq[T], error) {
+func (r *Response[T]) Items() (iter.Seq[*T], error) {
 	err := r.validate()
 	if err != nil {
 		return nil, err
@@ -86,23 +86,28 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 	}
 
 	// decode current array
-	var data []T
+	var data []*T
 	decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items)) //nolint:wsl,wsl_v5
 	decoder.DisallowUnknownFields()
 
 	err = decoder.Decode(&data)
 	if err != nil {
-		var value T
+		if len(data) > 0 {
+			return nil, errors.Join(errDecodingResponse, err)
+		}
+		var value *T
+		decoder = json.NewDecoder(bytes.NewBuffer(*paginatedResponse.Items)) //nolint:wsl,wsl_v5
+		decoder.DisallowUnknownFields()
 
 		err = decoder.Decode(&value)
 		if err != nil {
 			return nil, errors.Join(errDecodingResponse, err)
 		}
 
-		data = []T{value}
+		data = []*T{value}
 	}
 
-	iterator := func(yield func(T) bool) {
+	iterator := func(yield func(*T) bool) {
 		for _, value := range data {
 			if !yield(value) {
 				return
@@ -113,9 +118,10 @@ func (r *Response[T]) Items() (iter.Seq[T], error) {
 			return
 		}
 
-		query := r.request.httpRequest.URL.Query()
+		httpRequest := r.request.http()
+		query := httpRequest.URL.Query()
 		query.Set("cursor", *paginatedResponse.NextPagePath)
-		r.request.httpRequest.URL.RawQuery = query.Encode()
+		httpRequest.URL.RawQuery = query.Encode()
 
 		data, err := r.request.Do()
 		if err != nil {
