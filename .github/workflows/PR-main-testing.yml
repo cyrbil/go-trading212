@@ -50,6 +50,7 @@ jobs:
 
       # Send report
       - name: "Upload summary"
+        if: "matrix.os == 'ubuntu-latest' && matrix.go-version == 'stable'"
         uses: "test-summary/action@v2"
         with:
           paths: "testing-report.xml"
