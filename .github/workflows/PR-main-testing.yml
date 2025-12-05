@@ -51,7 +51,7 @@ jobs:
         uses: "test-summary/action@v2"
         with:
           paths: "testing-report.xml"
-          output: "test-summary-${{ matrix.os }}-go.${{ go-version }}.md"
+          output: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
 
       - name: "Upload test summary"
         uses: "actions/upload-artifact@v3"
