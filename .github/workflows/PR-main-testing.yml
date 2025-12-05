@@ -20,8 +20,8 @@ jobs:
     # head_ref only exists for PR, in this case we use the job id to allow concurrency
     # otherwise ze use the run id which will make all the jobs wait
     concurrency:
-      #group: "${{ github.head_ref && github.job || github.run_id }}"
-      group: "${{ github.run_id }}"
+      #group: 'concurrency-lock-${{ github.head_ref && 'job-' github.job || 'run-' github.run_id }}'
+      group: "concurrency-lock-${{ 'run-' github.run_id }}"
       cancel-in-progress: false
 
     strategy:
@@ -80,7 +80,7 @@ jobs:
         #if: "github.event_name == 'schedule' && steps.testing-summary.outputs.failed > 0"
         env:
           GH_TOKEN: "${{ github.token }}"
-          LABEL: "automated-testing"
+          LABEL: "bug,automated testing"
           TITLE: "Continuous testing is failing for ${{ matrix.os }}-go.${{ matrix.go-version }}"
           CONTENT: |
             # Automated testing is reporting failure
