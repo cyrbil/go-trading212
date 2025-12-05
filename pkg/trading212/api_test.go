@@ -244,3 +244,7 @@ func Test_NewAPILive(t *testing.T) {
 		})
 	}
 }
+
+func Test_failing(t *testing.T) {
+	t.Errorf("failing test")
+}
