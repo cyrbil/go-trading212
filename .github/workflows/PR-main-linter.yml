@@ -1,6 +1,6 @@
 ---
 
-name: "PR testing"
+name: "PR linter"
 
 on:
   pull_request:

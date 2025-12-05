@@ -1,6 +1,6 @@
 ---
 
-name: "PR testing"
+name: "PR coverage"
 
 on:
   pull_request:
@@ -24,10 +24,6 @@ jobs:
         uses: "actions/setup-go@v6.1.0"
         with:
           go-version: "stable"
-
-      # Install tap adapter
-      - name: "Install go install github.com/jstemmer/go-junit-report/v2@latest"
-        run: "go install github.com/jstemmer/go-junit-report/v2@latest"
 
       # Generate coverage
       - name: "Generate test coverage"
