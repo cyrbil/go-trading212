@@ -31,6 +31,7 @@ jobs:
 
       # Generate coverage
       - name: "Generate test coverage"
+        continue-on-error: true
         run: "go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./..."
 
       # Retrieve coverage breakdown
@@ -47,7 +48,7 @@ jobs:
       - name: "Check test coverage"
         id: "go-test-coverage"
         uses: "vladopajic/go-test-coverage/action/source@v2"
-        continue-on-error: true  # Should fail after coverage comment is posted
+        continue-on-error: true
         with:
           # config
           profile: "cover.out"

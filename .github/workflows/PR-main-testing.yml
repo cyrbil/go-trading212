@@ -39,6 +39,7 @@ jobs:
 
       # Run the testing
       - name: "Run unit-tests"
+        continue-on-error: true
         run: |
           go test -race -v  ./... 2>&1 \
           |  go run github.com/jstemmer/go-junit-report/v2@latest \
@@ -47,8 +48,6 @@ jobs:
 
       - name: "Generate summary"
         id: "summary"
-        # TODO: validate required github.event_name == 'pull_request'
-        if: "always()"
         uses: "test-summary/action@v2"
         with:
           paths: "testing-report.xml"
@@ -61,9 +60,12 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           comment-tag: "go-testing"
-          file-path: "${{ steps.summary.inputs.output }}"
+          file-path: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
 
+      # TODO: create issue on failed
+      
       # Assert coverage passes threshold
       - name: "Assert testing passes"
         if: "steps.summary.outputs.failed > 0"
         run: "echo 'Testing failed' && exit 1"
+
