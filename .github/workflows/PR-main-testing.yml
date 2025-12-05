@@ -16,6 +16,14 @@ permissions:
 
 jobs:
   Testing:
+    # Prevent multiple run for continuous testing, so the issue creation does not have a race condition
+    # head_ref only exists for PR, in this case we use the job id to allow concurrency
+    # otherwise ze use the run id which will make all the jobs wait
+    concurrency:
+      #group: "${{ github.head_ref && github.job || github.run_id }}"
+      group: "${{ github.run_id }}"
+      cancel-in-progress: false
+
     strategy:
       matrix:
         go-version:
@@ -72,7 +80,7 @@ jobs:
         #if: "github.event_name == 'schedule' && steps.testing-summary.outputs.failed > 0"
         env:
           GH_TOKEN: "${{ github.token }}"
-          LABEL: ""
+          LABEL: "automated-testing"
           TITLE: "Continuous testing is failing for ${{ matrix.os }}-go.${{ matrix.go-version }}"
           CONTENT: |
             # Automated testing is reporting failure
@@ -83,8 +91,8 @@ jobs:
         shell: "bash"
         run: |
           declare ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" )
-          if [ "${#ISSUES}" > 0 ]; then
-              echo "Github issue already exists:  ${#ISSUES} '${ISSUES}'"
+          if [ "${#ISSUES}" -ne 0 ]; then
+              echo -e "Github issue already exists:\n\n${ISSUES}"
           else
               echo "Creating github issue..."
               gh issue create --label "${{ env.LABEL }}" --title "${{ env.TITLE }}" --body "${{ env.CONTENT }}"
