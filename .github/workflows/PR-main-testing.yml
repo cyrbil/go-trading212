@@ -44,6 +44,7 @@ jobs:
       # Run the testing
       - name: "Run unit-tests"
         continue-on-error: true
+        shell: "bash"
         run: |
           go test -race -v  ./... 2>&1 \
           |  go run github.com/jstemmer/go-junit-report/v2@latest \
@@ -79,6 +80,7 @@ jobs:
             - **ref**: ${{ github.ref }}
             - **source**: ${{ github.workflow_ref }}
             - **run**: ${{ github.workflow}}#${{ github.run_number }}
+        shell: "bash"
         run: |
           declare ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" )
           if [ "${#ISSUES}" > 0 ]; then
@@ -94,5 +96,6 @@ jobs:
       # Assert coverage passes threshold
       - name: "Assert testing passes"
         if: "steps.testing-summary.outputs.failed > 0"
+        shell: "bash"
         run: "echo 'Testing failed' && exit 1"
 

@@ -49,4 +49,5 @@ jobs:
       # Assert coverage passes threshold
       - name: "Validate coverage passes threshold"
         if: "steps.linter.outcome == 'failure'"
+        shell: "bash"
         run: "echo 'Linter return issues' && exit 1"

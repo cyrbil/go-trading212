@@ -32,6 +32,7 @@ jobs:
       # Generate coverage
       - name: "Generate test coverage"
         continue-on-error: true
+        shell: "bash"
         run: "go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./..."
 
       # Retrieve coverage breakdown
@@ -67,6 +68,7 @@ jobs:
 
       # Render coverage map
       - name: "Generate coverage tree map"
+        shell: "bash"
         run: |
           go run github.com/nikolaydubina/go-cover-treemap@latest \
               -coverprofile cover.out \
@@ -106,4 +108,5 @@ jobs:
       # Assert coverage passes threshold
       - name: "Validate coverage passes threshold"
         if: "steps.go-test-coverage.outcome == 'failure'"
+        shell: "bash"
         run: "echo 'Coverage below threshold' && exit 1"
