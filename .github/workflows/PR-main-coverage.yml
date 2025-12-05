@@ -88,13 +88,13 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           comment-tag: "go-coverage"
           message: |
-            _(execution **${{ github.run_id }}** / attempt **${{ github.run_attempt }}**)_
-            go test coverage report:
-            ```
-            ${{ steps.go-test-coverage.outputs.report }}
+            _(execution #**${{ github.run_id }}** / attempt **${{ github.run_attempt }}**)_
+            ## test coverage report:
             
             ```
-          # TODO: ${{ fromJSON(steps.go-test-coverage.outputs.report) }}
+            ${{ fromJSON(steps.go-test-coverage.outputs.report) }}
+            ```
+          # TODO: confused, hooray
 
       # Assert coverage passes threshold
       - name: "Validate coverage passes threshold"

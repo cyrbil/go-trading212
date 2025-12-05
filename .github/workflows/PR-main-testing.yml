@@ -61,6 +61,6 @@ jobs:
         if: "always()"
 
       # Assert coverage passes threshold
-      - name: "Validate coverage passes threshold"
+      - name: "Assert testing passes"
         if: "steps.summary.outputs.failed > 0"
         run: "echo 'Testing failed' && exit 1"
