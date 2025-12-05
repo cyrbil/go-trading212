@@ -72,11 +72,11 @@ jobs:
         env:
           GH_TOKEN: "${{ github.token }}"
         run: |
-          gh issue list --state open --label canary-failing
-          echo "CODE: $?"
-          gh issue create \
-            --label canary-failing
-            --title "Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}"
+          gh issue list --state open --label canary-failing \ 
+          | grep . \
+          && gh issue create \
+            --label canary-failing \
+            --title "Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}" \
             --body "
           # Automated testing is reporting failure
           
