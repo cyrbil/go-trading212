@@ -48,7 +48,7 @@ jobs:
                -out testing-report.xml
 
       - name: "Generate summary"
-        id: "summary"
+        id: "testing-summary"
         uses: "test-summary/action@v2"
         with:
           paths: "testing-report.xml"
@@ -62,11 +62,12 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           comment-tag: "go-testing"
           file-path: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
+          reactions: "${{ steps.testing-summary.outputs.failed > 0 && 'hooray' || 'confused' }}"
 
       # TODO: create issue on failed
 
       # Assert coverage passes threshold
       - name: "Assert testing passes"
-        if: "steps.summary.outputs.failed > 0"
+        if: "steps.testing-summary.outputs.failed > 0"
         run: "echo 'Testing failed' && exit 1"
 
