@@ -33,7 +33,7 @@ jobs:
       # Upload linter artifacts
       - name: "Archive production artifacts"
         uses: "actions/upload-artifact@v4"
-        if: "success() || failure()"
+        if: "always()"
         with:
           name: "linter reports"
           include-hidden-files: "true"
@@ -43,7 +43,6 @@ jobs:
 
       # Send results to PR
       - name: "Upload MegaLinter scan results to GitHub"
-        if: "success() || failure()"
         uses: "github/codeql-action/upload-sarif@v4"
         with:
           sarif_file: "megalinter-reports/megalinter-report.sarif"
