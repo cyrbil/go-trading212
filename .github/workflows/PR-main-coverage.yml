@@ -95,7 +95,7 @@ jobs:
             ```
             ${{ fromJSON(steps.go-test-coverage.outputs.report) }}
             ```
-          reactions: "${{ steps.go-test-coverage.outputs.failed > 0 && 'hooray' || 'confused' }}"
+          reactions: "${{ steps.go-test-coverage.outcome == 'failure' && 'confused' || 'hooray' }}"
           # TODO: confused, hooray
 
       # Assert coverage passes threshold

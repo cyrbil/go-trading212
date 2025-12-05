@@ -62,7 +62,7 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           comment-tag: "go-testing"
           file-path: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
-          reactions: "${{ steps.testing-summary.outputs.failed > 0 && 'hooray' || 'confused' }}"
+          reactions: "${{ steps.testing-summary.outputs.failed > 0 && 'confused' || 'hooray' }}"
 
       # TODO: create issue on failed
 
