@@ -68,7 +68,7 @@ jobs:
           reactions: "${{ steps.testing-summary.outputs.failed > 0 && 'confused' || 'hooray' }}"
 
       - name: "Create Issue on failure for scheduled testing"
-        if: "github.event_name == 'schedule'"
+        #if: "github.event_name == 'schedule'"
         run: |
           gh issue list --state open --label canary-failing
           echo "CODE: $?"
