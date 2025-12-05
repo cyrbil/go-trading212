@@ -80,7 +80,7 @@ jobs:
             - **source**: ${{ github.workflow_ref }}
             - **run**: ${{ github.workflow}}#${{ github.run_number }}
         run: |
-          local ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" )
+          declare ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" )
           if [ "${#ISSUES}" > 0 ]; then
               echo "Github issue already exists:\n\n${ISSUES}"
           else
