@@ -54,22 +54,15 @@ jobs:
           paths: "testing-report.xml"
           output: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
 
-      - name: "Upload test summary"
-        uses: "actions/upload-artifact@v4"
-        with:
-          name: "Test Summary"
-          path: "${{ steps.summary.inputs.output }}"
-        if: "always()"
-
       # Comment PR
-      - name: "Comment PR with coverage"
+      - name: "Comment PR with summary"
         if: "github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.go-version == 'stable'"
         uses: "thollander/actions-comment-pull-request@v3"
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           comment-tag: "go-testing"
           file-path: "${{ steps.summary.inputs.output }}"
-          
+
       # Assert coverage passes threshold
       - name: "Assert testing passes"
         if: "steps.summary.outputs.failed > 0"
