@@ -12,7 +12,7 @@ permissions:
   pull-requests: "write"  # for comment
 
 jobs:
-  linter:
+  Linter:
     runs-on: [ "ubuntu-latest" ]
     steps:
       #      - id: pr-linter
@@ -29,8 +29,6 @@ jobs:
         continue-on-error: true
         env:
           SARIF_REPORTER: "true"
-        with:
-          ref: "${{ inputs.ref }}"
 
       # Upload linter artifacts
       - name: "Archive linter artifacts"

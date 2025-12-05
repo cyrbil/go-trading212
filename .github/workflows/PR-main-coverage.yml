@@ -16,7 +16,7 @@ permissions:
   pull-requests: "write"  # for comment
 
 jobs:
-  coverage:
+  Coverage:
     runs-on: [ "ubuntu-latest" ]
     steps:
       # Checkout
@@ -75,7 +75,6 @@ jobs:
 
       # Upload coverage breakdown
       - name: "Upload artifact (coverage.breakdown.txt)"
-        if: "github.event_name == 'push'"
         uses: "actions/upload-artifact@v5"
         with:
           name: "Coverage breakdown"

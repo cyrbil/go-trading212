@@ -9,9 +9,10 @@ on:
 
 permissions:
   contents: "read"  # for code
+  pull-requests: "write"  # PR comment
 
 jobs:
-  testing:
+  Testing:
     strategy:
       matrix:
         go-version:
@@ -63,7 +64,7 @@ jobs:
           file-path: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
 
       # TODO: create issue on failed
-      
+
       # Assert coverage passes threshold
       - name: "Assert testing passes"
         if: "steps.summary.outputs.failed > 0"
