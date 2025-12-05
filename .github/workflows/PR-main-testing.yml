@@ -54,10 +54,10 @@ jobs:
           output: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
 
       - name: "Upload test summary"
-        uses: "actions/upload-artifact@v3"
+        uses: " actions/upload-artifact@v4"
         with:
           name: "Test Summary"
-          path: "test-summary.md"
+          path: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
         if: "always()"
 
       # Assert coverage passes threshold
