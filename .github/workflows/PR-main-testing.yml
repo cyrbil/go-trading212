@@ -15,9 +15,9 @@ jobs:
     strategy:
       matrix:
         go-version:
-        #- "1.23"  # oldest supported version
-        - "stable"  # most recent supported version
-        #- "oldstable"  # for compatibility
+          #- "1.23"  # oldest supported version
+          - "stable"  # most recent supported version
+          #- "oldstable"  # for compatibility
         os:
           - "ubuntu-latest"
           #- "windows-latest"
