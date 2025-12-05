@@ -72,16 +72,17 @@ jobs:
         env:
           GH_TOKEN: "${{ github.token }}"
         run: |
-          gh issue list --state open --label canary-failing \ 
-          | grep . \
-          && gh issue create \
-            --label canary-failing \
-            --title 'Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}' \
-            --body '
-          # Automated testing is reporting failure
-          
-          - **source**: ${{ github.workflow_ref }}
-          - **run**: ${{ github.run_number }}
+          gh issue list --state open --label canary-failing                             \
+          | grep .                                                                      \
+          && gh issue create                                                            \
+            --label canary-failing                                                      \
+            --title 'Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}'  \
+            --body '                                                                    \
+          # Automated testing is reporting failure                                      \
+                                                                                        \
+          - **ref**: ${{ github.ref }}                                                  \
+          - **source**: ${{ github.workflow_ref }}                                      \
+          - **run**: ${{ github.workflow}}#${{ github.run_number }}                     \
           '
 
       # Assert coverage passes threshold
