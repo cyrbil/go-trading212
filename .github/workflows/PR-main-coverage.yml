@@ -1,0 +1,100 @@
+---
+
+name: "PR testing"
+
+env:
+  BRANCH: "${{ github.event.repository.default_branch }}"
+
+on:
+  pull_request:
+    branches:
+      - "${{ env.BRANCH }}"
+
+permissions:
+  contents: "read"  # for code
+  security-events: "write"  # for sarif upload
+
+jobs:
+  coverage:
+    runs-on: ["ubuntu-latest"]
+    steps:
+      # Checkout
+      - name: "Checkout project"
+        uses: "actions/checkout@v6.0.0"
+
+      # Install golang
+      - name: "Set-up Go"
+        uses: "actions/setup-go@v6.1.0"
+        with:
+          go-version: "stable"
+
+      # Install tap adapter
+      - name: "Install go install github.com/jstemmer/go-junit-report/v2@latest"
+        run: "go install github.com/jstemmer/go-junit-report/v2@latest"
+
+      # Generate coverage
+      - name: "Generate test coverage"
+        run: "go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./..."
+        with:
+          profile: "cover.out"
+
+      # Retrieve coverage breakdown
+      - name: "Download artifact (main.breakdown)"
+        id: "download-main-breakdown"
+        uses: "dawidd6/action-download-artifact@v11"
+        with:
+          branch: "$default-branch"
+          workflow_conclusion: "success"
+          name: "main.breakdown"
+          if_no_artifact_found: "fail"
+
+      # Upload coverage comment
+      - name: "Check test coverage"
+        id: "go-test-coverage"
+        uses: "vladopajic/go-test-coverage@v2"
+        continue-on-error: true  # Should fail after coverage comment is posted
+        with:
+          profile: "cover.out"
+          threshold-total: 95
+          git-branch: "badges"
+          git-token: "${{ secrets.GITHUB_TOKEN }}"
+          breakdown-file-name: "main.breakdown"
+          diff-base-breakdown-file-name: |
+            ${{
+              steps.download-main-breakdown.outputs.found_artifact == 'true'
+              && 'main.breakdown'
+              || ''
+            }}
+
+      # Upload coverage breakdown
+      - name: "Upload artifact (main.breakdown)"
+        uses: "actions/upload-artifact@v5"
+        with:
+          name: "main.breakdown"
+          path: "main.breakdown"
+          if-no-files-found: "error"
+
+      # Render coverage map
+      - name: "Generate coverage tree map"
+        run: >
+          go run github.com/nikolaydubina/go-cover-treemap@latest
+               -coverprofile ${{ steps.go-test-coverage.outputs.gocov-agg-pathname }}
+               -only-folders=true >/tmp/treemap.svg
+
+      # Comment PR
+      - name: "Comment PR with coverage"
+        uses: "thollander/actions-comment-pull-request@v3"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          comment-tag: "go-coverage"
+          message: |
+            _(execution **${{ github.run_id }}** / attempt **${{ github.run_attempt }}**)_
+            go test coverage report:
+            ```
+            ${{ fromJSON(steps.go-test-coverage.outputs.report) }}
+            ```
+
+      # Assert coverage passes threshold
+      - name: "Validate coverage passes threshold"
+        if: "steps.go-test-coverage.outcome == 'failure'"
+        run: "echo 'Coverage failed' && exit 1"
