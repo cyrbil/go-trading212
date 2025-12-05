@@ -84,7 +84,7 @@ jobs:
         run: |
           declare ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" )
           if [ "${#ISSUES}" > 0 ]; then
-              echo "Github issue already exists:\n\n${ISSUES}"
+              echo "Github issue already exists:  ${#ISSUES} '${ISSUES}'"
           else
               echo "Creating github issue..."
               gh issue create --label "${{ env.LABEL }}" --title "${{ env.TITLE }}" --body "${{ env.CONTENT }}"
