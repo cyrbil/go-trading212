@@ -71,19 +71,25 @@ jobs:
         #if: "github.event_name == 'schedule' && steps.testing-summary.outputs.failed > 0"
         env:
           GH_TOKEN: "${{ github.token }}"
+          LABEL: ""
+          TITLE: "Continuous testing is failing for ${{ matrix.os }}-go.${{ matrix.go-version }}"
+          CONTENT: |
+            # Automated testing is reporting failure
+            
+            - **ref**: ${{ github.ref }}
+            - **source**: ${{ github.workflow_ref }}
+            - **run**: ${{ github.workflow}}#${{ github.run_number }}
         run: |
-          gh issue list --state open --label canary-failing                             \
-          | grep .                                                                      \
-          && gh issue create                                                            \
-            --label canary-failing                                                      \
-            --title 'Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}'  \
-            --body '                                                                    \
-          # Automated testing is reporting failure                                      \
-                                                                                        \
-          - **ref**: ${{ github.ref }}                                                  \
-          - **source**: ${{ github.workflow_ref }}                                      \
-          - **run**: ${{ github.workflow}}#${{ github.run_number }}                     \
-          '
+          local ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" )
+          if [ "${#ISSUES}" > 0 ]; then
+              echo "Github issue already exists:\n\n${ISSUES}"
+          else
+              echo "Creating github issue..."
+              gh issue create --label "${{ env.LABEL }}" --title "${{ env.TITLE }}" --body "${{ env.CONTENT }}"
+              if [ $? -ne 0 ]; then
+                  echo "Error: Github issue creation failed!"
+              fi
+          fi
 
       # Assert coverage passes threshold
       - name: "Assert testing passes"
