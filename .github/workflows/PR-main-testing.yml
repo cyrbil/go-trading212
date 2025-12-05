@@ -39,10 +39,10 @@ jobs:
 
       # Run the testing
       - name: "Run unit-tests"
-        run: >
-          go test -race -v  ./... 2>&1
-          |  go run github.com/jstemmer/go-junit-report/v2@latest
-               -iocopy
+        run: |
+          go test -race -v  ./... 2>&1 \
+          |  go run github.com/jstemmer/go-junit-report/v2@latest \
+               -iocopy \
                -out testing-report.xml
 
       - name: "Generate summary"

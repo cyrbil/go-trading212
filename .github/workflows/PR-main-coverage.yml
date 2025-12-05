@@ -62,10 +62,11 @@ jobs:
 
       # Render coverage map
       - name: "Generate coverage tree map"
-        run: >
-          go run github.com/nikolaydubina/go-cover-treemap@latest
-               -coverprofile ${{ steps.go-test-coverage.outputs.gocov-agg-pathname }}
-               -only-folders=true >/tmp/treemap.svg
+        run: |
+          go run github.com/nikolaydubina/go-cover-treemap@latest \
+               -coverprofile "${{ steps.go-test-coverage.outputs.gocov-agg-pathname }}" \
+               -only-folders=true \
+          >/tmp/treemap.svg
 
       # Upload coverage breakdown
       - name: "Upload artifact (main.breakdown)"
