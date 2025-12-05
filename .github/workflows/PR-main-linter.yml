@@ -8,7 +8,7 @@ on:
       - "main"
 
 permissions:
-  contents: "write"  # for badges
+  contents: "read"
   pull-requests: "write"  # for comment
 
 jobs:

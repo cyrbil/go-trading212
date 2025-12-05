@@ -11,7 +11,7 @@ on:
       - "main"
 
 permissions:
-  contents: "read"  # for code
+  contents: "write"  # for badge
   security-events: "write"  # for sarif upload
   pull-requests: "write"  # for comment
 
@@ -34,13 +34,13 @@ jobs:
         run: "go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./..."
 
       # Retrieve coverage breakdown
-      - name: "Download artifact (main.breakdown)"
+      - name: "Download artifact (coverage.breakdown.txt)"
         id: "download-main-breakdown"
         uses: "dawidd6/action-download-artifact@v11"
         with:
           branch: "main"
           workflow_conclusion: "success"
-          name: "main.breakdown"
+          name: "coverage.breakdown.txt"
           if_no_artifact_found: "warn"
 
       # Upload coverage comment
@@ -56,11 +56,11 @@ jobs:
           git-branch: "badges"
           git-token: "${{ secrets.GITHUB_TOKEN }}"
           # diff
-          breakdown-file-name: "main.breakdown"
+          breakdown-file-name: "coverage.breakdown.txt"
           diff-base-breakdown-file-name: |-
             ${{
               steps.download-main-breakdown.outputs.found_artifact == 'true'
-              && 'main.breakdown'
+              && 'coverage.breakdown.txt'
               || ''
             }}
 
@@ -73,16 +73,17 @@ jobs:
       #    >/tmp/treemap.svg
 
       # Upload coverage breakdown
-      - name: "Upload artifact (main.breakdown)"
+      - name: "Upload artifact (coverage.breakdown.txt)"
         if: "github.event_name == 'push'"
         uses: "actions/upload-artifact@v5"
         with:
-          name: "main.breakdown"
-          path: "main.breakdown"
+          name: "Coverage breakdown"
+          path: "coverage.breakdown.txt"
           if-no-files-found: "error"
 
       # Comment PR
       - name: "Comment PR with coverage"
+        if: "github.event_name == 'pull_request'"
         uses: "thollander/actions-comment-pull-request@v3"
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -99,4 +100,4 @@ jobs:
       # Assert coverage passes threshold
       - name: "Validate coverage passes threshold"
         if: "steps.go-test-coverage.outcome == 'failure'"
-        run: "echo 'Coverage failed' && exit 1"
+        run: "echo 'Coverage below threshold' && exit 1"
