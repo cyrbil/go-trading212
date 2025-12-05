@@ -6,6 +6,9 @@ on:
   pull_request:
     branches:
       - "main"
+  push:
+    branches:
+      - "main"
 
 permissions:
   contents: "read"  # for code
@@ -37,7 +40,7 @@ jobs:
           branch: "main"
           workflow_conclusion: "success"
           name: "main.breakdown"
-          #if_no_artifact_found: "fail"
+          if_no_artifact_found: "warn"
 
       # Upload coverage comment
       - name: "Check test coverage"
@@ -57,20 +60,22 @@ jobs:
               || ''
             }}
 
-      # Upload coverage breakdown
-      - name: "Upload artifact (main.breakdown)"
-        uses: "actions/upload-artifact@v5"
-        with:
-          name: "main.breakdown"
-          path: "main.breakdown"
-          if-no-files-found: "error"
-
       # Render coverage map
       - name: "Generate coverage tree map"
         run: >
           go run github.com/nikolaydubina/go-cover-treemap@latest
                -coverprofile ${{ steps.go-test-coverage.outputs.gocov-agg-pathname }}
                -only-folders=true >/tmp/treemap.svg
+
+      # Upload coverage breakdown
+      - name: "Upload artifact (main.breakdown)"
+        if: "github.event_name == 'push'"
+        uses: "actions/upload-artifact@v5"
+        with:
+          name: "main.breakdown"
+          path: "main.breakdown"
+          if-no-files-found: "error"
+
 
       # Comment PR
       - name: "Comment PR with coverage"

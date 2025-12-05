@@ -37,20 +37,30 @@ jobs:
         with:
           go-version: "${{ matrix.go-version }}"
 
-      # Install tap adapter
-      - name: "Install reporter"
-        run: "go install github.com/jstemmer/go-junit-report/v2@latest"
-
       # Run the testing
       - name: "Run unit-tests"
         run: >
           go test -race -v  ./... 2>&1
-          |  go-junit-report -set-exit-code 
-          > testing-report.xml
+          |  go run github.com/jstemmer/go-junit-report/v2@latest
+               -iocopy
+               -out testing-report.xml
 
-      # Send report
-      - name: "Upload summary"
-        if: "matrix.os == 'ubuntu-latest' && matrix.go-version == 'stable'"
+      - name: "Generate summary"
+        id: "summary"
+        if: "always()"
         uses: "test-summary/action@v2"
         with:
           paths: "testing-report.xml"
+          output: "test-summary-${{ matrix.os }}-go.${{ go-version }}.md"
+
+      - name: "Upload test summary"
+        uses: "actions/upload-artifact@v3"
+        with:
+          name: "Test Summary"
+          path: "test-summary.md"
+        if: "always()"
+
+      # Assert coverage passes threshold
+      - name: "Validate coverage passes threshold"
+        if: "steps.summary.outputs.failed > 0"
+        run: "echo 'Testing failed' && exit 1"
