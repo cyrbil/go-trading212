@@ -66,19 +66,21 @@ jobs:
             }}
 
       # Render coverage map
-      #- name: "Generate coverage tree map"
-      #  run: |
-      #    go run github.com/nikolaydubina/go-cover-treemap@latest \
-      #         -coverprofile "${{ steps.go-test-coverage.outputs.gocov-agg-pathname }}" \
-      #         -only-folders=true \
-      #    >/tmp/treemap.svg
+      - name: "Generate coverage tree map"
+        run: |
+          go run github.com/nikolaydubina/go-cover-treemap@latest \
+              -coverprofile cover.out \
+          >coverage-treemap.svg
 
       # Upload coverage breakdown
-      - name: "Upload artifact (coverage.breakdown.txt)"
+      - name: "Upload artifact (coverage files)"
         uses: "actions/upload-artifact@v5"
         with:
-          name: "Coverage breakdown"
-          path: "coverage.breakdown.txt"
+          name: "Coverage files"
+          path: |
+            cover.out
+            coverage.breakdown.txt
+            coverage-treemap.svg
           if-no-files-found: "error"
 
       # Comment PR
@@ -90,11 +92,14 @@ jobs:
           comment-tag: "go-coverage"
           message: |
             _(execution #**${{ github.run_id }}** / attempt **${{ github.run_attempt }}**)_
-            ## test coverage report:
+            
+            ## Test coverage report:
             
             ```
             ${{ fromJSON(steps.go-test-coverage.outputs.report) }}
             ```
+            
+            (coverage map available in artifacts)
           reactions: "${{ steps.go-test-coverage.outcome == 'failure' && 'confused' || 'hooray' }}"
           # TODO: confused, hooray
 

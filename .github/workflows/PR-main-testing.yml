@@ -6,23 +6,26 @@ on:
   pull_request:
     branches:
       - "main"
+  schedule:
+    - cron: 0 * * * *
 
 permissions:
   contents: "read"  # for code
   pull-requests: "write"  # PR comment
+  issues: "write"  # for canary failure reporting
 
 jobs:
   Testing:
     strategy:
       matrix:
         go-version:
-          #- "1.23"  # oldest supported version
+          - "1.23"  # oldest supported version
           - "stable"  # most recent supported version
-          #- "oldstable"  # for compatibility
+          - "oldstable"  # for compatibility
         os:
           - "ubuntu-latest"
-          #- "windows-latest"
-          #- "macOS-latest"
+          - "windows-latest"
+          - "macOS-latest"
 
     runs-on: "${{ matrix.os }}"
 
@@ -64,7 +67,20 @@ jobs:
           file-path: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
           reactions: "${{ steps.testing-summary.outputs.failed > 0 && 'confused' || 'hooray' }}"
 
-      # TODO: create issue on failed
+      - name: "Create Issue on failure for scheduled testing"
+        if: "github.event_name == 'schedule'"
+        run: |
+          gh issue list --state open --label canary-failing
+          echo "CODE: $?"
+          gh issue create \
+            --label canary-failing
+            --title "Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}"
+            --body "
+          # Automated testing is reporting failure
+          
+          - **source**: ${{ github.workflow_ref }}
+          - **run**: ${{ github.run_number }}
+          "
 
       # Assert coverage passes threshold
       - name: "Assert testing passes"
