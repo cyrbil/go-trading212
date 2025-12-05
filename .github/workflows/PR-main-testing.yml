@@ -76,13 +76,13 @@ jobs:
           | grep . \
           && gh issue create \
             --label canary-failing \
-            --title "Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}" \
-            --body "
+            --title 'Testing failing for ${{ matrix.os }}-go.${{ matrix.go-version }}' \
+            --body '
           # Automated testing is reporting failure
           
           - **source**: ${{ github.workflow_ref }}
           - **run**: ${{ github.run_number }}
-          "
+          '
 
       # Assert coverage passes threshold
       - name: "Assert testing passes"
