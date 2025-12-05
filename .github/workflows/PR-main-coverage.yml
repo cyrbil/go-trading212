@@ -32,8 +32,6 @@ jobs:
       # Generate coverage
       - name: "Generate test coverage"
         run: "go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./..."
-        with:
-          profile: "cover.out"
 
       # Retrieve coverage breakdown
       - name: "Download artifact (main.breakdown)"
