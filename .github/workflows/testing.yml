@@ -16,13 +16,6 @@ permissions:
 
 jobs:
   Testing:
-    # Prevent multiple run for continuous testing, so the issue creation does not have a race condition
-    # head_ref only exists for PR, in this case we allow concurrency
-    # otherwise ze use the run id which will make all the jobs wait
-    concurrency:
-      group: "${{ github.head_ref && '' || format('lock-run-{0}', github.run_id) }}"
-      cancel-in-progress: false
-
     strategy:
       matrix:
         go-version:
@@ -90,8 +83,11 @@ jobs:
             - **source**: ${{ github.workflow_ref }}
             - **run**: ${{ github.workflow}}#${{ github.run_number }}
         shell: "bash"
+        # There is a race condition for the matrix jobs between the list and create
+        # however, fixing it is tedious and having multiple issue open is not a big deal
+        # since they are titled with the matrix anyway.
         run: |
-          declare ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" )
+          declare ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" --search "${{ env.TITLE }}" )
           if [ "${#ISSUES}" -ne 0 ]; then
               echo -e "Github issue already exists:\n\n${ISSUES}"
           else
