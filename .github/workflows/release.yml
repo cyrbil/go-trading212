@@ -8,8 +8,7 @@ on:
       - "main"
 
 permissions:
-  contents: "read"
-  pull-requests: "write"  # for comment
+  contents: "write"  # for tag
 
 jobs:
   release:
@@ -30,6 +29,7 @@ jobs:
           passphrase: "${{ secrets.RELEASER_GPG_PASSPHRASE }}"
           git_user_signingkey: true
           git_tag_gpgsign: true
+          git_config_global: true
 
       - name: "Find next version"
         id: "semver"
