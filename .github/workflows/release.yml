@@ -31,7 +31,18 @@ jobs:
           git_tag_gpgsign: true
 
       - name: "Find next version"
+        id: "semver"
         uses: "anothrNick/github-tag-action@1.75.0"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           TAG_PREFIX: "v"
+          DRY_RUN: "true"
+          TAG_CONTEXT: "branch"
+
+      - name: "Find next version"
+        uses: "anothrNick/github-tag-action@1.75.0"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          TAG_PREFIX: "v"
+          TAG_MESSAGE: "Release ${{ steps.semver.outputs.new_tag }}"
+          TAG_CONTEXT: "branch"
