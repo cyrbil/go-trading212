@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   testing:
-    name: "Testing ${{ github.event_name }}"
+    name: "Testing ${{ github.event_name }} on ${{ matrix.os }}-go.${{ matrix.go-version }}"
     strategy:
       matrix:
         go-version:
