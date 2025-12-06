@@ -3,7 +3,6 @@
 [![Go Reference][go-reference-badge]][go-reference]
 [![License][license-badge]][license]
 [![Go Version][go-version-badge]][go-version]
-[![Build Status][build-badge]][build]
 [![coded-by-badge][coded-by-badge]][repo-commits]
 
 [![Release Status][release-badge]][release]
