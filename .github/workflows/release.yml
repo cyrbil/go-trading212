@@ -44,4 +44,4 @@ jobs:
         shell: "bash"
         run: |
           git tag -s "${{ steps.semver.outputs.new_tag }}" -m "Release ${{ steps.semver.outputs.new_tag }}"
-          git push --signed origin tag "${{ steps.semver.outputs.new_tag }}"
+          git push origin tag "${{ steps.semver.outputs.new_tag }}"
