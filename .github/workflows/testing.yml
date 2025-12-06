@@ -1,6 +1,6 @@
 ---
 
-name: "PR testing"
+name: "Testing workflow"
 
 on:
   pull_request:
@@ -18,7 +18,8 @@ permissions:
   issues: "write"  # for canary failure reporting
 
 jobs:
-  Testing:
+  testing:
+    name: "Testing ${{ github.event_name }}"
     strategy:
       matrix:
         go-version:

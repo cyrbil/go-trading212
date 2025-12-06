@@ -1,6 +1,6 @@
 ---
 
-name: "PR linter"
+name: "Linter workflow"
 
 on:
   pull_request:
@@ -12,7 +12,8 @@ permissions:
   pull-requests: "write"  # for comment
 
 jobs:
-  Linter:
+  linter:
+    name: "Linter ${{ github.event_name }}"
     runs-on: [ "ubuntu-latest" ]
     steps:
       # Checkout code

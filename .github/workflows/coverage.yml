@@ -1,6 +1,6 @@
 ---
 
-name: "PR coverage"
+name: "Coverage workflow"
 
 on:
   pull_request:
@@ -16,7 +16,8 @@ permissions:
   pull-requests: "write"  # for comment
 
 jobs:
-  Coverage:
+  coverage:
+    name: "Coverage ${{ github.event_name }}"
     runs-on: [ "ubuntu-latest" ]
     steps:
       # Checkout code

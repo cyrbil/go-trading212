@@ -1,6 +1,6 @@
 ---
 
-name: "Release"
+name: "Release workflow"
 
 on:
   push:
@@ -12,7 +12,8 @@ permissions:
   pull-requests: "write"  # for comment
 
 jobs:
-  Release:
+  release:
+    name: "Release ${{ github.event_name }}"
     environment: "Release"
     runs-on: [ "ubuntu-latest" ]
     steps:
