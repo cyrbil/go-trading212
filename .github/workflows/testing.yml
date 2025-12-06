@@ -1,5 +1,4 @@
 ---
-
 name: "Testing workflow"
 
 on:
@@ -13,9 +12,9 @@ on:
     - cron: "0 * * * *"
 
 permissions:
-  contents: "read"  # for code
-  pull-requests: "write"  # PR comment
-  issues: "write"  # for canary failure reporting
+  contents: "read" # for code
+  pull-requests: "write" # PR comment
+  issues: "write" # for canary failure reporting
 
 jobs:
   testing:
@@ -23,9 +22,9 @@ jobs:
     strategy:
       matrix:
         go-version:
-          - "1.23"  # oldest supported version
-          - "stable"  # most recent supported version
-          - "oldstable"  # for compatibility
+          - "1.23" # oldest supported version
+          - "stable" # most recent supported version
+          - "oldstable" # for compatibility
         os:
           - "ubuntu-latest"
           - "windows-latest"
@@ -82,7 +81,7 @@ jobs:
           TITLE: "Continuous testing is failing for ${{ matrix.os }}-go.${{ matrix.go-version }}"
           CONTENT: |
             # Automated testing is reporting failure
-            
+
             - **ref**: ${{ github.ref }}
             - **source**: ${{ github.workflow_ref }}
             - **run**: ${{ github.workflow}}#${{ github.run_number }}
@@ -91,13 +90,20 @@ jobs:
         # however, fixing it is tedious and having multiple issue open is not a big deal
         # since they are titled with the matrix anyway.
         run: |
-          declare ISSUES=$( gh issue list --state open --label "${{ env.LABEL }}" --search "${{ env.TITLE }}" )
-          if [ "${#ISSUES}" -ne 0 ]; then
+          ISSUES="$(
+              gh issue list \
+                  --state open \
+                  --label "${{ env.LABEL }}" \
+                  --search "${{ env.TITLE }}"
+          )"
+          if [ "$ISSUES" -ne 0 ]; then
               echo -e "Github issue already exists:\n\n${ISSUES}"
           else
               echo "Creating github issue..."
-              gh issue create --label "${{ env.LABEL }}" --title "${{ env.TITLE }}" --body "${{ env.CONTENT }}"
-              if [ $? -ne 0 ]; then
+              if gh issue create \
+                     --label "${{ env.LABEL }}" \
+                     --title "${{ env.TITLE }}" \
+                     --body "${{ env.CONTENT }}"; then
                   echo "Error: Github issue creation failed!"
               fi
           fi
@@ -107,4 +113,3 @@ jobs:
         if: "steps.testing-summary.outputs.failed > 0"
         shell: "bash"
         run: "echo 'Testing failed' && exit 1"
-

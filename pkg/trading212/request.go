@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -16,19 +17,19 @@ import (
 const defaultMaxRetries = 10
 
 var (
-	errNewHttp    = errors.New("fail to create http request")
-	errApiRequest = errors.New("error executing api request")
-	errReadingApi = errors.New("error reading api response")
+	errNewHTTP    = errors.New("fail to create http request")
+	errAPIRequest = errors.New("error executing api request")
+	errReadingAPI = errors.New("error reading api response")
 	errNon200     = errors.New("error api return non http 200")
-	errHttp401    = errors.New("error api return http 401; Bad API key")
-	errHttp403    = errors.New("error api return http 403; Scope missing for API key")
-	errHttp408    = errors.New("error api return http 408; Timed-out")
+	errHTTP401    = errors.New("error api return http 401; Bad API key")
+	errHTTP403    = errors.New("error api return http 403; Scope missing for API key")
+	errHTTP408    = errors.New("error api return http 408; Timed-out")
 )
 
 type knownErrorCode int
 
 const (
-	badApiKey    knownErrorCode = 401
+	badAPIKey    knownErrorCode = 401
 	scopeMissing knownErrorCode = 403
 	timeout      knownErrorCode = 408
 	rateLimited  knownErrorCode = 429
@@ -38,14 +39,14 @@ func httpError(code int, status string) error {
 	var err error
 
 	switch knownErrorCode(code) {
-	case badApiKey:
-		err = errHttp401
+	case badAPIKey:
+		err = errHTTP401
 		break
 	case scopeMissing:
-		err = errHttp403
+		err = errHTTP403
 		break
 	case timeout:
-		err = errHttp408
+		err = errHTTP408
 		break
 	default:
 		err = errNon200
@@ -55,6 +56,13 @@ func httpError(code int, status string) error {
 	return fmt.Errorf("%w (status: %s)", err, status)
 }
 
+// IRequest Request interface
+type IRequest interface {
+	Do() (*json.RawMessage, error)
+	http() *http.Request
+}
+
+// Request API request
 type Request struct {
 	//nolint:containedctx
 	Ctx         context.Context
@@ -81,7 +89,7 @@ func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Rea
 	if err != nil {
 		cancel(err)
 
-		return nil, errors.Join(errNewHttp, err)
+		return nil, errors.Join(errNewHTTP, err)
 	}
 
 	// authentication
@@ -103,11 +111,6 @@ func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Rea
 	}, nil
 }
 
-type IRequest interface {
-	Do() (*json.RawMessage, error)
-	http() *http.Request
-}
-
 // Do executes the current request.
 func (request *Request) Do() (*json.RawMessage, error) {
 	defer request.cancel(nil)
@@ -118,7 +121,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	//nolint:bodyclose // body is closed in lambda
 	response, err := request.api.client.Do(request.httpRequest)
 	if err != nil {
-		err := errors.Join(errApiRequest, err)
+		err := errors.Join(errAPIRequest, err)
 		return nil, err
 	}
 	defer func(Body io.ReadCloser) {
@@ -152,7 +155,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 
 	data, err := io.ReadAll(response.Body)
 	if err != nil {
-		err := errors.Join(errReadingApi, err)
+		err := errors.Join(errReadingAPI, err)
 		return nil, err
 	}
 

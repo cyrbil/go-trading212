@@ -1,5 +1,4 @@
 ---
-
 name: "Coverage workflow"
 
 on:
@@ -11,14 +10,14 @@ on:
       - "main"
 
 permissions:
-  contents: "write"  # for badge
-  security-events: "write"  # for sarif upload
-  pull-requests: "write"  # for comment
+  contents: "write" # for badge
+  security-events: "write" # for sarif upload
+  pull-requests: "write" # for comment
 
 jobs:
   coverage:
     name: "Coverage ${{ github.event_name }}"
-    runs-on: [ "ubuntu-latest" ]
+    runs-on: ["ubuntu-latest"]
     steps:
       # Checkout code
       - name: "Checkout project"
@@ -103,13 +102,13 @@ jobs:
           comment-tag: "go-coverage"
           message: |
             _(execution #**${{ github.run_id }}** / attempt **${{ github.run_attempt }}**)_
-            
+
             ## Test coverage report:
-            
+
             ```
             ${{ fromJSON(steps.go-test-coverage.outputs.report) }}
             ```
-            
+
             (coverage map available in artifacts)
           reactions: "${{ steps.go-test-coverage.outcome == 'failure' && 'confused' || 'hooray' }}"
 

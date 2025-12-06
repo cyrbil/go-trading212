@@ -1,5 +1,7 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
+// APIEndpoint type
 type APIEndpoint string
 
 const version APIEndpoint = "/api/v0"
@@ -10,31 +12,64 @@ const endpointBase = version + "/equity"
 //goland:noinspection GoCommentStart
 const (
 	// Account
+
+	// GetAccountSummary endpoint
 	GetAccountSummary = endpointBase + "/account/summary"
+
 	// Instruments
-	GetExchangesMetadata       = endpointBase + "/metadata/exchanges"
+
+	// GetExchangesMetadata endpoint
+	GetExchangesMetadata = endpointBase + "/metadata/exchanges"
+	// GetAllAvailableInstruments endpoint
 	GetAllAvailableInstruments = endpointBase + "/metadata/instruments"
+
 	// Orders
+
+	// GetAllPendingOrders endpoint
 	GetAllPendingOrders = endpointBase + "/orders"
+	// GetPendingOrderByID endpoint
 	GetPendingOrderByID = endpointBase + "/orders" // + /{id}
-	PlaceLimitOrder     = endpointBase + "/orders/limit"
-	PlaceMarketOrder    = endpointBase + "/orders/market"
-	PlaceStopOrder      = endpointBase + "/orders/stop"
+	// PlaceLimitOrder endpoint
+	PlaceLimitOrder = endpointBase + "/orders/limit"
+	// PlaceMarketOrder endpoint
+	PlaceMarketOrder = endpointBase + "/orders/market"
+	// PlaceStopOrder endpoint
+	PlaceStopOrder = endpointBase + "/orders/stop"
+	// PlaceStopLimitOrder endpoint
 	PlaceStopLimitOrder = endpointBase + "/orders/stop_limit"
-	CancelOrder         = endpointBase + "/orders" // + /{id}
+	// CancelOrder endpoint
+	CancelOrder = endpointBase + "/orders" // + /{id}
+
 	// Positions
+
+	// GetAllPositions endpoint
 	GetAllPositions = endpointBase + "/positions"
+
 	// Historical events
-	GetDividends        = endpointBase + "/history/dividends"
+
+	// GetDividends endpoint
+	GetDividends = endpointBase + "/history/dividends"
+	// GetHistoricalOrders endpoint
 	GetHistoricalOrders = endpointBase + "/history/orders"
-	GetTransactions     = endpointBase + "/history/transactions"
-	ListReports         = endpointBase + "/history/exports"
-	RequestReport       = endpointBase + "/history/exports"
+	// GetTransactions endpoint
+	GetTransactions = endpointBase + "/history/transactions"
+	// ListReports endpoint
+	ListReports = endpointBase + "/history/exports"
+	// RequestReport endpoint
+	RequestReport = endpointBase + "/history/exports"
+
 	// Pies
-	GetAllPies   = endpointBase + "/pies"
-	CreatePie    = endpointBase + "/pies"
-	DeletePie    = endpointBase + "/pies" // + /{id}
-	FetchPie     = endpointBase + "/pies" // + /{id}
-	UpdatePie    = endpointBase + "/pies" // + /{id}
+
+	// GetAllPies endpoint
+	GetAllPies = endpointBase + "/pies"
+	// CreatePie endpoint
+	CreatePie = endpointBase + "/pies"
+	// DeletePie endpoint
+	DeletePie = endpointBase + "/pies" // + /{id}
+	// FetchPie endpoint
+	FetchPie = endpointBase + "/pies" // + /{id}
+	// UpdatePie endpoint
+	UpdatePie = endpointBase + "/pies" // + /{id}
+	// DuplicatePie endpoint
 	DuplicatePie = endpointBase + "/pies" // + /{id}/duplicate
 )

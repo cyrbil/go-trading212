@@ -20,7 +20,7 @@
 
 
 A comprehensive Go client library for interacting with the [Trading212 Rest API][trading212-docs].
-This library provides a type-safe, idiomatic Go interface for managing your Trading212 account, 
+This library provides a type-safe, idiomatic Go interface for managing your Trading212 account,
 placing orders, monitoring positions, and accessing historical trading data.
 
 
@@ -219,7 +219,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## Disclaimer
 
-This library is not affiliated with, endorsed by, or sponsored by Trading212. Use at your own risk. 
+This library is not affiliated with, endorsed by, or sponsored by Trading212. Use at your own risk.
 
 
 [go-reference-badge]: https://pkg.go.dev/badge/github.com/cyrbil/go-trading212.svg

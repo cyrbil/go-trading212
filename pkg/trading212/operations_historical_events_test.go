@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -10,11 +11,13 @@ import (
 func Test_HistoricalEvents_Operations(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Test HistoricalEvents GetPaidOutDividends", func(t *testing.T) {
-		validateOperationItems[models.Dividend](t,
-			func(api *API) (iter.Seq[*models.Dividend], error) {
-				return api.HistoricalEvents.GetPaidOutDividends()
-			}, `
+	t.Run(
+		"Test HistoricalEvents GetPaidOutDividends", func(t *testing.T) {
+			validateOperationItems[models.Dividend](
+				t,
+				func(api *API) (iter.Seq[*models.Dividend], error) {
+					return api.HistoricalEvents.GetPaidOutDividends()
+				}, `
 			{
 				"items": [{
 					"amount": 0,
@@ -36,14 +39,18 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 				}],
 				"nextPagePath": null
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test HistoricalEvents GetHistoricalOrders", func(t *testing.T) {
-		validateOperationItems[models.OrderFill](t,
-			func(api *API) (iter.Seq[*models.OrderFill], error) {
-				return api.HistoricalEvents.GetHistoricalOrders()
-			}, `
+	t.Run(
+		"Test HistoricalEvents GetHistoricalOrders", func(t *testing.T) {
+			validateOperationItems[models.OrderFill](
+				t,
+				func(api *API) (iter.Seq[*models.OrderFill], error) {
+					return api.HistoricalEvents.GetHistoricalOrders()
+				}, `
 			{
 				"items": [{
 					"fill": {
@@ -94,14 +101,18 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 				}],
 				"nextPagePath": null
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test HistoricalEvents GetTransactions", func(t *testing.T) {
-		validateOperationItems[models.Transaction](t,
-			func(api *API) (iter.Seq[*models.Transaction], error) {
-				return api.HistoricalEvents.GetTransactions()
-			}, `
+	t.Run(
+		"Test HistoricalEvents GetTransactions", func(t *testing.T) {
+			validateOperationItems[models.Transaction](
+				t,
+				func(api *API) (iter.Seq[*models.Transaction], error) {
+					return api.HistoricalEvents.GetTransactions()
+				}, `
 			{
 				"items": [{
 					"amount": 0,
@@ -112,14 +123,18 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 				}],
 				"nextPagePath": null
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test HistoricalEvents ListReports", func(t *testing.T) {
-		validateOperationItems[models.Report](t,
-			func(api *API) (iter.Seq[*models.Report], error) {
-				return api.HistoricalEvents.ListReports()
-			}, `
+	t.Run(
+		"Test HistoricalEvents ListReports", func(t *testing.T) {
+			validateOperationItems[models.Report](
+				t,
+				func(api *API) (iter.Seq[*models.Report], error) {
+					return api.HistoricalEvents.ListReports()
+				}, `
 			[{
 				"dataIncluded": {
 					"includeDividends": true,
@@ -133,17 +148,23 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 				"timeFrom": "2019-08-24T14:15:22Z",
 				"timeTo": "2019-08-24T14:15:22Z"
 			}]
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test HistoricalEvents RequestReport", func(t *testing.T) {
-		validateOperationObject[models.ReportId](t,
-			func(api *API) (*models.ReportId, error) {
-				return api.HistoricalEvents.RequestReport(models.ReportRequest{})
-			}, `
+	t.Run(
+		"Test HistoricalEvents RequestReport", func(t *testing.T) {
+			validateOperationObject[models.ReportID](
+				t,
+				func(api *API) (*models.ReportID, error) {
+					return api.HistoricalEvents.RequestReport(models.ReportRequest{})
+				}, `
 			{
 				"reportId": 0
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 }

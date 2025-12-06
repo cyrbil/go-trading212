@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -10,11 +11,13 @@ import (
 func Test_Instruments_Operations(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Test Instruments GetExchangesMetadata", func(t *testing.T) {
-		validateOperationItems[models.ExchangeMetadata](t,
-			func(api *API) (iter.Seq[*models.ExchangeMetadata], error) {
-				return api.Instruments.GetExchangesMetadata()
-			}, `
+	t.Run(
+		"Test Instruments GetExchangesMetadata", func(t *testing.T) {
+			validateOperationItems[models.ExchangeMetadata](
+				t,
+				func(api *API) (iter.Seq[*models.ExchangeMetadata], error) {
+					return api.Instruments.GetExchangesMetadata()
+				}, `
 			[{
 				"id": 0,
 				"name": "string",
@@ -26,14 +29,18 @@ func Test_Instruments_Operations(t *testing.T) {
 					}]
 				}]
 			}]
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test Instruments GetAllAvailableInstruments", func(t *testing.T) {
-		validateOperationItems[models.Instrument](t,
-			func(api *API) (iter.Seq[*models.Instrument], error) {
-				return api.Instruments.GetAllAvailableInstruments()
-			}, `
+	t.Run(
+		"Test Instruments GetAllAvailableInstruments", func(t *testing.T) {
+			validateOperationItems[models.Instrument](
+				t,
+				func(api *API) (iter.Seq[*models.Instrument], error) {
+					return api.Instruments.GetAllAvailableInstruments()
+				}, `
 			[{
 				"addedOn": "2019-08-24T14:15:22Z",
 				"currencyCode": "USD",
@@ -46,6 +53,8 @@ func Test_Instruments_Operations(t *testing.T) {
 				"type": "ETF",
 				"workingScheduleId": 0
 			}]
-		`)
-	})
+		`,
+			)
+		},
+	)
 }

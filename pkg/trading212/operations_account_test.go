@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -9,11 +10,13 @@ import (
 func Test_Account_Operations(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Test Account.GetAccountSummary()", func(t *testing.T) {
-		validateOperationObject[models.AccountSummary](t,
-			func(api *API) (*models.AccountSummary, error) {
-				return api.Account.GetAccountSummary()
-			}, `
+	t.Run(
+		"Test Account.GetAccountSummary()", func(t *testing.T) {
+			validateOperationObject[models.AccountSummary](
+				t,
+				func(api *API) (*models.AccountSummary, error) {
+					return api.Account.GetAccountSummary()
+				}, `
 			{
 			  "cash": {
 				"availableToTrade": 0,
@@ -30,6 +33,8 @@ func Test_Account_Operations(t *testing.T) {
 			  },
 			  "totalValue": 0
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 }

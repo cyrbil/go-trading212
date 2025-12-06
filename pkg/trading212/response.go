@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -44,6 +45,7 @@ func (r *Response[T]) validate() error {
 	return nil
 }
 
+// Object get single response object
 func (r *Response[T]) Object() (*T, error) {
 	err := r.validate()
 	if err != nil {
@@ -66,6 +68,8 @@ func (r *Response[T]) Object() (*T, error) {
 	return value, nil
 }
 
+// Items get iterator over response results
+//
 //nolint:cyclop,funlen  // TODO: too complex
 func (r *Response[T]) Items() (iter.Seq[*T], error) {
 	err := r.validate()

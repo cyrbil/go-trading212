@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -10,11 +11,13 @@ import (
 func Test_Pies_Operations(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Test Pies FetchAllPies", func(t *testing.T) {
-		validateOperationItems[models.PieSummary](t,
-			func(api *API) (iter.Seq[*models.PieSummary], error) {
-				return api.Pies.FetchAllPies()
-			}, `
+	t.Run(
+		"Test Pies FetchAllPies", func(t *testing.T) {
+			validateOperationItems[models.PieSummary](
+				t,
+				func(api *API) (iter.Seq[*models.PieSummary], error) {
+					return api.Pies.FetchAllPies()
+				}, `
 			[{
 				"cash": 0,
 				"dividendDetails": {
@@ -32,14 +35,18 @@ func Test_Pies_Operations(t *testing.T) {
 				},
 				"status": "AHEAD"
 			}]
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test Pies CreatePie", func(t *testing.T) {
-		validateOperationObject[models.PieDetails](t,
-			func(api *API) (*models.PieDetails, error) {
-				return api.Pies.CreatePie(models.PieRequest{})
-			}, `
+	t.Run(
+		"Test Pies CreatePie", func(t *testing.T) {
+			validateOperationObject[models.PieDetails](
+				t,
+				func(api *API) (*models.PieDetails, error) {
+					return api.Pies.CreatePie(models.PieRequest{})
+				}, `
 			{
 				"instruments": [{
 					"currentShare": 0,
@@ -74,21 +81,29 @@ func Test_Pies_Operations(t *testing.T) {
 					"publicUrl": "string"
 				}
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test Pies DeletePie", func(t *testing.T) {
-		validateOperationObject[models.Empty](t,
-			func(api *API) (*models.Empty, error) {
-				return &models.Empty{}, api.Pies.DeletePie(0)
-			}, "")
-	})
+	t.Run(
+		"Test Pies DeletePie", func(t *testing.T) {
+			validateOperationObject[models.Empty](
+				t,
+				func(api *API) (*models.Empty, error) {
+					return &models.Empty{}, api.Pies.DeletePie(0)
+				}, "",
+			)
+		},
+	)
 
-	t.Run("Test Pies FetchPie", func(t *testing.T) {
-		validateOperationObject[models.PieDetails](t,
-			func(api *API) (*models.PieDetails, error) {
-				return api.Pies.FetchPie(0)
-			}, `
+	t.Run(
+		"Test Pies FetchPie", func(t *testing.T) {
+			validateOperationObject[models.PieDetails](
+				t,
+				func(api *API) (*models.PieDetails, error) {
+					return api.Pies.FetchPie(0)
+				}, `
 			{
 				"instruments": [{
 					"currentShare": 0,
@@ -122,14 +137,18 @@ func Test_Pies_Operations(t *testing.T) {
 					"publicUrl": "string"
 				}
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test Pies UpdatePie", func(t *testing.T) {
-		validateOperationObject[models.PieDetails](t,
-			func(api *API) (*models.PieDetails, error) {
-				return api.Pies.UpdatePie(0, models.PieRequest{})
-			}, `
+	t.Run(
+		"Test Pies UpdatePie", func(t *testing.T) {
+			validateOperationObject[models.PieDetails](
+				t,
+				func(api *API) (*models.PieDetails, error) {
+					return api.Pies.UpdatePie(0, models.PieRequest{})
+				}, `
 			{
 				"instruments": [{
 					"currentShare": 0,
@@ -163,14 +182,18 @@ func Test_Pies_Operations(t *testing.T) {
 					"publicUrl": "string"
 				}
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 
-	t.Run("Test Pies DuplicatePies", func(t *testing.T) {
-		validateOperationObject[models.PieDetails](t,
-			func(api *API) (*models.PieDetails, error) {
-				return api.Pies.DuplicatePies(0, models.PieMetaRequest{})
-			}, `
+	t.Run(
+		"Test Pies DuplicatePies", func(t *testing.T) {
+			validateOperationObject[models.PieDetails](
+				t,
+				func(api *API) (*models.PieDetails, error) {
+					return api.Pies.DuplicatePies(0, models.PieMetaRequest{})
+				}, `
 			{
 				"instruments": [{
 					"currentShare": 0,
@@ -204,6 +227,8 @@ func Test_Pies_Operations(t *testing.T) {
 					"publicUrl": "string"
 				}
 			}
-		`)
-	})
+		`,
+			)
+		},
+	)
 }

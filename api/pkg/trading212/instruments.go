@@ -1,12 +1,14 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import "time"
 
+// ExchangeMetadata response type
 type ExchangeMetadata struct {
-	Id               uint   `json:"id"`
+	ID               uint   `json:"id"`
 	Name             string `json:"name"`
 	WorkingSchedules []struct {
-		Id         uint `json:"id"`
+		ID         uint `json:"id"`
 		TimeEvents []struct {
 			Date time.Time `json:"date"`
 			//  Enum "OPEN", "CLOSE", "BREAK_START", "BREAK_END", "PRE_MARKET_OPEN",
@@ -16,6 +18,7 @@ type ExchangeMetadata struct {
 	} `json:"workingSchedules"`
 }
 
+// Instrument response type
 type Instrument struct {
 	// On the platform since
 	AddedOn time.Time `json:"addedOn"`
@@ -31,5 +34,5 @@ type Instrument struct {
 	// Enum "CRYPTOCURRENCY", "ETF", "FOREX", "FUTURES", "INDEX", "STOCK", "WARRANT", "CRYPTO", "CVR", "CORPACT"
 	Type string `json:"type"`
 	// Get items in the /exchanges endpoint
-	WorkingScheduleId uint `json:"workingScheduleId"`
+	WorkingScheduleID uint `json:"workingScheduleId"`
 }

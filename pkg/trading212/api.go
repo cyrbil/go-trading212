@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -11,20 +12,22 @@ import (
 
 const defaultTimeout = 5 * time.Second
 
+// APIURL string url for trading212 api
 type APIURL string
 
 const (
-	APIURLDemo APIURL = "https://demo.trading212.com"
-	APIURLLive APIURL = "https://live.trading212.com"  // gitleaks:allow # false positive
+	apiURLDemo APIURL = "https://demo.trading212.com"
+	apiURLLive APIURL = "https://live.trading212.com" // gitleaks:allow # false positive
 )
 
 var (
 	errEmptyDomain    = errors.New("domain should not be empty")
 	errInvalidDomain  = errors.New("domain be a valid url")
-	errEmptyApiKey    = errors.New("API key should not be empty")
-	errEmptyApiSecret = errors.New("API secret should not be empty")
+	errEmptyAPIKey    = errors.New("API key should not be empty")
+	errEmptyAPISecret = errors.New("API secret should not be empty")
 )
 
+// API client for trading212
 type API struct {
 	*operations
 
@@ -36,32 +39,35 @@ type API struct {
 	client *http.Client
 }
 
+// NewAPILive create a new client for trading212 API live
 func NewAPILive(apiKey string, apiSecret SecureString) (*API, error) {
-	return NewAPI(APIURLLive, apiKey, apiSecret)
+	return NewAPI(apiURLLive, apiKey, apiSecret)
 }
 
+// NewAPIDemo create a new client for trading212 API demo
 func NewAPIDemo(apiKey string, apiSecret SecureString) (*API, error) {
-	return NewAPI(APIURLDemo, apiKey, apiSecret)
+	return NewAPI(apiURLDemo, apiKey, apiSecret)
 }
 
-func NewAPI(apiUrl APIURL, apiKey string, apiSecret SecureString) (*API, error) {
-	if apiUrl == "" {
+// NewAPI create a new client for trading212 API
+func NewAPI(apiURL APIURL, apiKey string, apiSecret SecureString) (*API, error) {
+	if apiURL == "" {
 		return nil, errEmptyDomain
 	}
 	if apiKey == "" {
-		return nil, errEmptyApiKey
+		return nil, errEmptyAPIKey
 	}
 	if apiSecret == "" {
-		return nil, errEmptyApiSecret
+		return nil, errEmptyAPISecret
 	}
 
-	domainUrl, err := url.Parse(string(apiUrl))
+	domainURL, err := url.Parse(string(apiURL))
 	if err != nil {
 		return nil, errors.Join(errInvalidDomain, err)
 	}
 
 	api := &API{
-		domain:     domainUrl,
+		domain:     domainURL,
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
 		rateLimits: make(map[string]internal.APIRateLimits),

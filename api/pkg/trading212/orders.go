@@ -1,7 +1,9 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import "time"
 
+// Order response type
 type Order struct {
 	// The ISO 8601 formatted date of when the order was created.
 	CreatedAt time.Time `json:"createdAt"`
@@ -15,7 +17,7 @@ type Order struct {
 	// Note: Placing orders by value is not currently supported via the API.
 	FilledValue float64 `json:"filledValue"`
 	// A unique, system-generated identifier for the order.
-	Id uint `json:"id"`
+	ID uint `json:"id"`
 	// How the order was initiated.
 	// Enum: "API", "IOS", "ANDROID", "WEB", "SYSTEM", "AUTOINVEST"
 	InitiatedFrom string `json:"initiatedFrom"`
@@ -76,22 +78,26 @@ type baseStopOrderRequest struct {
 	StopPrice float64 `json:"stopPrice"`
 }
 
+// LimitOrderRequest response type
 type LimitOrderRequest struct {
 	baseOrderRequest
 	baseLimitOrderRequest
 }
 
+// MarketOrderRequest response type
 type MarketOrderRequest struct {
 	baseOrderRequest
 
 	ExtendedHours bool `json:"extendedHours,omitempty"`
 }
 
+// StopLimitOrderRequest response type
 type StopLimitOrderRequest struct {
 	baseOrderRequest
 	baseLimitOrderRequest
 }
 
+// StopOrderRequest response type
 type StopOrderRequest struct {
 	baseOrderRequest
 	baseStopOrderRequest

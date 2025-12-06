@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -11,10 +12,12 @@ import (
 // Used to avoid leaking credentials when logging.
 type SecureString string
 
+// String format
 func (s SecureString) String() string {
 	return "[REDACTED]"
 }
 
+// MarshalJSON format
 func (s SecureString) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.String())
 }
@@ -28,7 +31,7 @@ type jsonBody struct {
 	reader     func([]byte, []byte) (int, error)
 }
 
-func newJsonBody(data any) *jsonBody {
+func newJSONBody(data any) *jsonBody {
 	return &jsonBody{
 		data:       data,
 		marshaller: json.Marshal,
@@ -38,6 +41,7 @@ func newJsonBody(data any) *jsonBody {
 	}
 }
 
+// Read as json
 func (b jsonBody) Read(buf []byte) (int, error) {
 	jsonData, err := b.marshaller(b.data)
 	if err != nil {

@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -19,12 +20,12 @@ func Test_SecureString(t *testing.T) {
 		t.Errorf("SecureString value is unprotected from format, got: %s", secureStringFmt)
 	}
 
-	secureStringJson, err := json.Marshal(secureString)
+	secureStringJSON, err := json.Marshal(secureString)
 	if err != nil {
 		t.Error(err)
 	}
-	if string(secureStringJson) == `"foobar"` {
-		t.Errorf("SecureString value is unprotected from marshalling, got: %s", secureStringJson)
+	if string(secureStringJSON) == `"foobar"` {
+		t.Errorf("SecureString value is unprotected from marshalling, got: %s", secureStringJSON)
 	}
 
 	if !reflect.DeepEqual(string(secureString), "foobar") {
@@ -45,10 +46,12 @@ func Test_jsonBody_Read(t *testing.T) {
 	}{
 		{
 			name: "jsonBody.Read() validations",
-			jsonBody: newJsonBody(&models.PieMetaRequest{
-				Icon: "foo",
-				Name: "bar",
-			}),
+			jsonBody: newJSONBody(
+				&models.PieMetaRequest{
+					Icon: "foo",
+					Name: "bar",
+				},
+			),
 			args: args{
 				buf: make([]byte, 30),
 			},
@@ -62,7 +65,7 @@ func Test_jsonBody_Read(t *testing.T) {
 					Icon: "foo",
 					Name: "bar",
 				},
-				marshaller: func(v any) ([]byte, error) {
+				marshaller: func(_ any) ([]byte, error) {
 					return nil, errors.New("mock error")
 				},
 				reader: nil,
@@ -81,7 +84,7 @@ func Test_jsonBody_Read(t *testing.T) {
 					Name: "bar",
 				},
 				marshaller: json.Marshal,
-				reader: func(_ []byte, __ []byte) (int, error) {
+				reader: func(_ []byte, _ []byte) (int, error) {
 					return 0, errors.New("mock error")
 				},
 			},
@@ -93,22 +96,24 @@ func Test_jsonBody_Read(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.jsonBody.Read(tt.args.buf)
-			if err != nil {
-				if !errors.Is(err, tt.wantErr) {
-					t.Errorf("Read() error = %v, wantErr %v", err, tt.wantErr)
+		t.Run(
+			tt.name, func(t *testing.T) {
+				got, err := tt.jsonBody.Read(tt.args.buf)
+				if err != nil {
+					if !errors.Is(err, tt.wantErr) {
+						t.Errorf("Read() error = %v, wantErr %v", err, tt.wantErr)
+					}
+					return
 				}
-				return
-			}
 
-			if got < len(tt.want) {
-				t.Errorf("jsonBody.Read() length error; got = %v, want %v", got, len(tt.want))
-			}
+				if got < len(tt.want) {
+					t.Errorf("jsonBody.Read() length error; got = %v, want %v", got, len(tt.want))
+				}
 
-			if !bytes.HasPrefix(tt.args.buf, []byte(tt.want)) {
-				t.Errorf("jsonBody.Read() data error; got = %s, want %v", tt.args.buf, tt.want)
-			}
-		})
+				if !bytes.HasPrefix(tt.args.buf, []byte(tt.want)) {
+					t.Errorf("jsonBody.Read() data error; got = %s, want %v", tt.args.buf, tt.want)
+				}
+			},
+		)
 	}
 }
