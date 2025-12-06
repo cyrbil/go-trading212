@@ -1,6 +1,7 @@
 # go-trading212
 
 [![Go Reference][go-reference-badge]][go-reference]
+![GitHub Tag][version-badge]
 [![License][license-badge]][license]
 [![Go Version][go-version-badge]][go-version]
 [![coded-by-badge][coded-by-badge]][repo-commits]
@@ -9,6 +10,7 @@
 [![Coverage Status][coverage-badge]][coverage]
 [![Testing Status][testing-badge]][testing]
 
+[version-badge]: https://img.shields.io/github/v/tag/cyrbil/go-trading212
 [coverage]: https://github.com/cyrbil/go-trading212/actions/workflows/coverage.yml
 [coverage-badge]: https://raw.githubusercontent.com/cyrbil/go-trading212/badges/.badges/main/coverage.svg?branch=main&event=push
 [testing]: https://github.com/cyrbil/go-trading212/actions/workflows/testing.yml
