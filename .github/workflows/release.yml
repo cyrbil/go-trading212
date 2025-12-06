@@ -44,5 +44,8 @@ jobs:
       - name: "Release tag"
         shell: "bash"
         run: |
-          git tag -s "${{ steps.semver.outputs.new_tag }}" -m "Release ${{ steps.semver.outputs.new_tag }}"
+          git tag \
+              -s "${{ steps.semver.outputs.new_tag }}" \
+              -m "Release ${{ steps.semver.outputs.new_tag }}" \
+              "${{ github.event.pull_request.merge_commit_sha }}"
           git push origin tag "${{ steps.semver.outputs.new_tag }}"
