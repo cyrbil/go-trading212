@@ -39,6 +39,7 @@ jobs:
           TAG_PREFIX: "v"
           DRY_RUN: "true"
           TAG_CONTEXT: "branch"
+          DEFAULT_BUMP: "patch"
 
       - name: "Release tag"
         shell: "bash"
