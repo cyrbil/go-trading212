@@ -19,7 +19,6 @@ jobs:
       - name: "Checkout Code"
         uses: "actions/checkout@v6.0.0"
         with:
-          ref: "${{ github.event.push.commit_sha }}"
           fetch-depth: 0
 
       - name: "Import GPG key"
@@ -46,6 +45,5 @@ jobs:
         run: |
           git tag \
               -s "${{ steps.semver.outputs.new_tag }}" \
-              -m "Release ${{ steps.semver.outputs.new_tag }}" \
-              "${{ github.event.push.commit_sha }}"
+              -m "Release ${{ steps.semver.outputs.new_tag }}"
           git push origin tag "${{ steps.semver.outputs.new_tag }}"
