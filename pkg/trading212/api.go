@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -6,18 +5,16 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
 const defaultTimeout = 5 * time.Second
 
-// APIURL string url for trading212 api
+// APIURL string url for trading212 api.
 type APIURL string
 
 const (
 	apiURLDemo APIURL = "https://demo.trading212.com"
-	apiURLLive APIURL = "https://live.trading212.com" // gitleaks:allow # false positive
+	apiURLLive APIURL = "https://live.trading212.com" //gitleaks:allow
 )
 
 var (
@@ -27,36 +24,38 @@ var (
 	errEmptyAPISecret = errors.New("API secret should not be empty")
 )
 
-// API client for trading212
+// API client for trading212.
 type API struct {
 	*operations
 
 	domain     *url.URL
 	apiKey     string
 	apiSecret  SecureString
-	rateLimits map[string]internal.APIRateLimits
+	rateLimits *RateLimiter
 
 	client *http.Client
 }
 
-// NewAPILive create a new client for trading212 API live
+// NewAPILive create a new client for trading212 API live.
 func NewAPILive(apiKey string, apiSecret SecureString) (*API, error) {
 	return NewAPI(apiURLLive, apiKey, apiSecret)
 }
 
-// NewAPIDemo create a new client for trading212 API demo
+// NewAPIDemo create a new client for trading212 API demo.
 func NewAPIDemo(apiKey string, apiSecret SecureString) (*API, error) {
 	return NewAPI(apiURLDemo, apiKey, apiSecret)
 }
 
-// NewAPI create a new client for trading212 API
+// NewAPI create a new client for trading212 API.
 func NewAPI(apiURL APIURL, apiKey string, apiSecret SecureString) (*API, error) {
 	if apiURL == "" {
 		return nil, errEmptyDomain
 	}
+
 	if apiKey == "" {
 		return nil, errEmptyAPIKey
 	}
+
 	if apiSecret == "" {
 		return nil, errEmptyAPISecret
 	}
@@ -70,7 +69,7 @@ func NewAPI(apiURL APIURL, apiKey string, apiSecret SecureString) (*API, error) 
 		domain:     domainURL,
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
-		rateLimits: make(map[string]internal.APIRateLimits),
+		rateLimits: NewRateLimiter(),
 		client: &http.Client{
 			Transport:     nil,
 			CheckRedirect: nil,

@@ -11,7 +11,7 @@
 # Or these specific files
 !go.mod
 !go.sum
-!.golangci.yml
+!.configs/
 
 # And not these folders
 !api/

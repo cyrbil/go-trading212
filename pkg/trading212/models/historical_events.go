@@ -1,17 +1,16 @@
-// Package trading212 github.com/cyrbil/go-trading212
-package trading212
+package models
 
 import "time"
 
-// Dividend response type
+// Dividend response type.
 type Dividend struct {
 	// Amount, in account's primary currency.
 	Amount int `json:"amount"`
-	// AmountInEuro
+	// AmountInEuro.
 	AmountInEuro int `json:"amountInEuro"`
 	// Currency, the account's primary currency.
 	Currency string `json:"currency"`
-	// GrossAmountPerShare, in instrument currency
+	// GrossAmountPerShare, in instrument currency.
 	GrossAmountPerShare int `json:"grossAmountPerShare"`
 	// Instrument information as given by /instruments endpoint.
 	Instrument struct {
@@ -24,15 +23,15 @@ type Dividend struct {
 		// Ticker, unique instrument identifier.
 		Ticker string `json:"ticker"`
 	} `json:"instrument"`
-	// PaidOn
+	// PaidOn time.
 	PaidOn time.Time `json:"paidOn"`
-	// Quantity
+	// Quantity.
 	Quantity int `json:"quantity"`
-	// Reference
+	// Reference.
 	Reference string `json:"reference"`
-	// Ticker
+	// Ticker.
 	Ticker string `json:"ticker"`
-	// TickerCurrency
+	// TickerCurrency.
 	TickerCurrency string `json:"tickerCurrency"`
 	// Type, enum "ORDINARY", "BONUS", "PROPERTY_INCOME", "RETURN_OF_CAPITAL_NON_US", "DEMERGER", "INTEREST",
 	// "CAPITAL_GAINS_DISTRIBUTION_NON_US", "INTERIM_LIQUIDATION", "ORDINARY_MANUFACTURED_PAYMENT",
@@ -61,76 +60,108 @@ type Dividend struct {
 	// "PTP_UNCHARACTERISED_INCOME_MANUFACTURED_PAYMENT", "MULTIPLE_1042S_TAX_COMPONENTS_MANUFACTURED_PAYMENT",
 	// "DIVIDEND_MANUFACTURED_PAYMENT", "SHORT_TERM_CAPITAL_GAINS_MANUFACTURED_PAYMENT",
 	// "LONG_TERM_CAPITAL_GAINS_MANUFACTURED_PAYMENT", "PROPERTY_INCOME_DISTRIBUTION_MANUFACTURED_PAYMENT",
-	// "TAX_EXEMPTED_MANUFACTURED_PAYMENT"
+	// "TAX_EXEMPTED_MANUFACTURED_PAYMENT".
 	Type string `json:"type"`
 }
 
-// ReportID response type
+// ReportID response type.
 type ReportID struct {
+	// ReportID.
 	ReportID uint `json:"reportId"`
 }
 
 type reportDataIncluded struct {
+	// DataIncluded.
 	DataIncluded struct {
-		IncludeDividends    bool `json:"includeDividends"`
-		IncludeInterest     bool `json:"includeInterest"`
-		IncludeOrders       bool `json:"includeOrders"`
+		// IncludeDividends.
+		IncludeDividends bool `json:"includeDividends"`
+		// IncludeInterest.
+		IncludeInterest bool `json:"includeInterest"`
+		// IncludeOrders.
+		IncludeOrders bool `json:"includeOrders"`
+		// IncludeTransactions.
 		IncludeTransactions bool `json:"includeTransactions"`
 	} `json:"dataIncluded"`
 }
 
 type reportTimeRange struct {
+	// TimeFrom.
 	TimeFrom time.Time `json:"timeFrom"`
-	TimeTo   time.Time `json:"timeTo"`
+	// TimeTo.
+	TimeTo time.Time `json:"timeTo"`
 }
 
-// Report response type
+// Report response type.
 type Report struct {
 	ReportID
 	reportDataIncluded
 	reportTimeRange
 
+	// DownloadLink.
 	DownloadLink string `json:"downloadLink"`
-	Status       string `json:"status"`
+	// Status.
+	Status string `json:"status"`
 }
 
-// ReportRequest request type
+// ReportRequest request type.
 type ReportRequest struct {
 	reportDataIncluded
 	reportTimeRange
 }
 
-// OrderFill response type
+// OrderFill response type.
 type OrderFill struct {
 	Order `json:"order"`
 
+	// Fill.
 	Fill struct {
-		FilledAt      time.Time `json:"filledAt"`
-		ID            int       `json:"id"`
-		Price         int       `json:"price"`
-		Quantity      int       `json:"quantity"`
-		TradingMethod string    `json:"tradingMethod"`
-		Type          string    `json:"type"`
-		WalletImpact  struct {
-			Currency           string `json:"currency"`
-			FxRate             int    `json:"fxRate"`
-			NetValue           int    `json:"netValue"`
-			RealisedProfitLoss int    `json:"realisedProfitLoss"`
-			Taxes              []struct {
+		// FilledAt.
+		FilledAt time.Time `json:"filledAt"`
+		// ID.
+		ID int `json:"id"`
+		// Price.
+		Price int `json:"price"`
+		// Quantity.
+		Quantity int `json:"quantity"`
+		// TradingMethod.
+		TradingMethod string `json:"tradingMethod"`
+		// Type.
+		Type string `json:"type"`
+		// WalletImpact.
+		WalletImpact struct {
+			// Currency.
+			Currency string `json:"currency"`
+			// FxRate.
+			FxRate int `json:"fxRate"`
+			// NetValue.
+			NetValue int `json:"netValue"`
+			// RealisedProfitLoss.
+			RealisedProfitLoss int `json:"realisedProfitLoss"`
+			// Taxes.
+			Taxes []struct {
+				// ChargedAt.
 				ChargedAt time.Time `json:"chargedAt"`
-				Currency  string    `json:"currency"`
-				Name      string    `json:"name"`
-				Quantity  int       `json:"quantity"`
+				// Currency.
+				Currency string `json:"currency"`
+				// Name.
+				Name string `json:"name"`
+				// Quantity.
+				Quantity int `json:"quantity"`
 			} `json:"taxes"`
 		} `json:"walletImpact"`
 	} `json:"fill"`
 }
 
-// Transaction response type
+// Transaction response type.
 type Transaction struct {
-	Amount    int       `json:"amount"`
-	Currency  string    `json:"currency"`
-	DateTime  time.Time `json:"dateTime"`
-	Reference string    `json:"reference"`
-	Type      string    `json:"type"`
+	// Amount.
+	Amount int `json:"amount"`
+	// Currency.
+	Currency string `json:"currency"`
+	// DateTime.
+	DateTime time.Time `json:"dateTime"`
+	// Reference.
+	Reference string `json:"reference"`
+	// Type.
+	Type string `json:"type"`
 }

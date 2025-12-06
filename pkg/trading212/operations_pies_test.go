@@ -1,11 +1,9 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
+	trading213 "github.com/cyrbil/go-trading212/pkg/trading212/models"
 	"iter"
 	"testing"
-
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 )
 
 func Test_Pies_Operations(t *testing.T) {
@@ -13,9 +11,10 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies FetchAllPies", func(t *testing.T) {
-			validateOperationItems[models.PieSummary](
+			t.Parallel()
+			validateOperationItems[trading213.PieSummary](
 				t,
-				func(api *API) (iter.Seq[*models.PieSummary], error) {
+				func(api *API) (iter.Seq[*trading213.PieSummary], error) {
 					return api.Pies.FetchAllPies()
 				}, `
 			[{
@@ -42,10 +41,11 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies CreatePie", func(t *testing.T) {
-			validateOperationObject[models.PieDetails](
+			t.Parallel()
+			validateOperationObject[trading213.PieDetails](
 				t,
-				func(api *API) (*models.PieDetails, error) {
-					return api.Pies.CreatePie(models.PieRequest{})
+				func(api *API) (*trading213.PieDetails, error) {
+					return api.Pies.CreatePie(trading213.PieRequest{})
 				}, `
 			{
 				"instruments": [{
@@ -88,10 +88,11 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies DeletePie", func(t *testing.T) {
-			validateOperationObject[models.Empty](
+			t.Parallel()
+			validateOperationObject[trading213.Empty](
 				t,
-				func(api *API) (*models.Empty, error) {
-					return &models.Empty{}, api.Pies.DeletePie(0)
+				func(api *API) (*trading213.Empty, error) {
+					return &trading213.Empty{}, api.Pies.DeletePie(0)
 				}, "",
 			)
 		},
@@ -99,9 +100,10 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies FetchPie", func(t *testing.T) {
-			validateOperationObject[models.PieDetails](
+			t.Parallel()
+			validateOperationObject[trading213.PieDetails](
 				t,
-				func(api *API) (*models.PieDetails, error) {
+				func(api *API) (*trading213.PieDetails, error) {
 					return api.Pies.FetchPie(0)
 				}, `
 			{
@@ -144,10 +146,11 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies UpdatePie", func(t *testing.T) {
-			validateOperationObject[models.PieDetails](
+			t.Parallel()
+			validateOperationObject[trading213.PieDetails](
 				t,
-				func(api *API) (*models.PieDetails, error) {
-					return api.Pies.UpdatePie(0, models.PieRequest{})
+				func(api *API) (*trading213.PieDetails, error) {
+					return api.Pies.UpdatePie(0, trading213.PieRequest{})
 				}, `
 			{
 				"instruments": [{
@@ -189,10 +192,11 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies DuplicatePies", func(t *testing.T) {
-			validateOperationObject[models.PieDetails](
+			t.Parallel()
+			validateOperationObject[trading213.PieDetails](
 				t,
-				func(api *API) (*models.PieDetails, error) {
-					return api.Pies.DuplicatePies(0, models.PieMetaRequest{})
+				func(api *API) (*trading213.PieDetails, error) {
+					return api.Pies.DuplicatePies(0, trading213.PieMetaRequest{})
 				}, `
 			{
 				"instruments": [{

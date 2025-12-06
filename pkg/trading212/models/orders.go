@@ -1,9 +1,8 @@
-// Package trading212 github.com/cyrbil/go-trading212
-package trading212
+package models
 
 import "time"
 
-// Order response type
+// Order response type.
 type Order struct {
 	// The ISO 8601 formatted date of when the order was created.
 	CreatedAt time.Time `json:"createdAt"`
@@ -19,7 +18,7 @@ type Order struct {
 	// A unique, system-generated identifier for the order.
 	ID uint `json:"id"`
 	// How the order was initiated.
-	// Enum: "API", "IOS", "ANDROID", "WEB", "SYSTEM", "AUTOINVEST"
+	// Enum: "API", "IOS", "ANDROID", "WEB", "SYSTEM", "AUTOINVEST".
 	InitiatedFrom string `json:"initiatedFrom"`
 	// Instrument information as given by /instruments endpoint.
 	Instrument struct {
@@ -40,24 +39,24 @@ type Order struct {
 	Side string `json:"side"`
 	// The current state of the order in its lifecycle.
 	// Enum: "LOCAL", "UNCONFIRMED", "CONFIRMED", "NEW", "CANCELLING", "CANCELLED", "PARTIALLY_FILLED",
-	// "FILLED", "REJECTED", "REPLACING", "REPLACED"
+	// "FILLED", "REJECTED", "REPLACING", "REPLACED".
 	Status string `json:"status"`
 	// Applicable to STOP and STOP_LIMIT orders.
 	StopPrice float64 `json:"stopPrice"`
 	// The strategy used to place the order, either by QUANTITY or VALUE.
 	// The API currently only supports placing orders by QUANTITY.
-	//  Enum: "QUANTITY", "VALUE"
+	//  Enum: "QUANTITY", "VALUE".
 	Strategy string `json:"strategy"`
-	// Unique instrument identifier. Get from the /instruments endpoint
+	// Unique instrument identifier. Get from the /instruments endpoint.
 	Ticker string `json:"ticker"`
 	// Specifies how long the order remains active:
 	//  - DAY: The order will automatically expire if not executed by midnight
 	//    in the time zone of the instrument's exchange.
 	//  - GOOD_TILL_CANCEL: The order remains active indefinitely until
 	//    it is either filled or explicitly cancelled by you.
-	// Enum: "DAY", "GOOD_TILL_CANCEL"
+	// Enum: "DAY", "GOOD_TILL_CANCEL".
 	TimeInForce string `json:"timeInForce"`
-	// Enum: "LIMIT", "STOP", "MARKET", "STOP_LIMIT"
+	// Enum: "LIMIT", "STOP", "MARKET", "STOP_LIMIT".
 	Type string `json:"type"`
 	// The total monetary value of the order. Applicable to value orders.
 	Value float64 `json:"value"`
@@ -70,34 +69,38 @@ type baseOrderRequest struct {
 	Quantity float64 `json:"quantity"`
 }
 type baseLimitOrderRequest struct {
-	LimitPrice  float64 `json:"limitPrice"`
-	TimeInForce string  `json:"timeInForce,omitempty"`
+	// LimitPrice.
+	LimitPrice float64 `json:"limitPrice"`
+	// TimeInForce.
+	TimeInForce string `json:"timeInForce,omitempty"`
 }
 
 type baseStopOrderRequest struct {
+	// StopPrice.
 	StopPrice float64 `json:"stopPrice"`
 }
 
-// LimitOrderRequest response type
+// LimitOrderRequest response type.
 type LimitOrderRequest struct {
 	baseOrderRequest
 	baseLimitOrderRequest
 }
 
-// MarketOrderRequest response type
+// MarketOrderRequest response type.
 type MarketOrderRequest struct {
 	baseOrderRequest
 
+	// ExtendedHours.
 	ExtendedHours bool `json:"extendedHours,omitempty"`
 }
 
-// StopLimitOrderRequest response type
+// StopLimitOrderRequest response type.
 type StopLimitOrderRequest struct {
 	baseOrderRequest
 	baseLimitOrderRequest
 }
 
-// StopOrderRequest response type
+// StopOrderRequest response type.
 type StopOrderRequest struct {
 	baseOrderRequest
 	baseStopOrderRequest

@@ -9,16 +9,20 @@ on:
     branches:
       - "main"
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 0 * * *"
 
 permissions:
-  contents: "read" # for code
-  pull-requests: "write" # PR comment
-  issues: "write" # for canary failure reporting
+  contents: "read"
 
 jobs:
   testing:
     name: "Testing ${{ github.event_name }} on ${{ matrix.os }}-go.${{ matrix.go-version }}"
+    runs-on: "${{ matrix.os }}"
+    permissions:
+      contents: "read" # for code
+      pull-requests: "write" # PR comment
+      issues: "write" # for canary failure reporting
+
     strategy:
       matrix:
         go-version:
@@ -30,16 +34,17 @@ jobs:
           - "windows-latest"
           - "macOS-latest"
 
-    runs-on: "${{ matrix.os }}"
-
     steps:
       # Checkout code
       - name: "Checkout project"
-        uses: "actions/checkout@v6.0.0"
+        uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8"
+        with:
+          fetch-depth: 1
+          persist-credentials: false
 
       # Install golang
       - name: "Set-up Go"
-        uses: "actions/setup-go@v6.1.0"
+        uses: "actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c"
         if: "success() || failure()"
         with:
           go-version: "${{ matrix.go-version }}"
@@ -57,15 +62,15 @@ jobs:
       # Build the testing xml report
       - name: "Generate summary"
         id: "testing-summary"
-        uses: "test-summary/action@v2"
+        uses: "test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86"
         with:
           paths: "testing-report.xml"
           output: "test-summary-${{ matrix.os }}-go.${{ matrix.go-version }}.md"
 
       # Comment PR
       - name: "Comment PR with summary"
-        if: "github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.go-version == 'stable'"
-        uses: "thollander/actions-comment-pull-request@v3"
+        if: "github.event_name == 'pull_request'"
+        uses: "thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b"
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           comment-tag: "go-testing"
@@ -93,17 +98,17 @@ jobs:
           ISSUES="$(
               gh issue list \
                   --state open \
-                  --label "${{ env.LABEL }}" \
-                  --search "${{ env.TITLE }}"
+                  --label "${LABEL}" \
+                  --search "${TITLE}"
           )"
           if [ "$ISSUES" -ne 0 ]; then
               echo -e "Github issue already exists:\n\n${ISSUES}"
           else
               echo "Creating github issue..."
               if gh issue create \
-                     --label "${{ env.LABEL }}" \
-                     --title "${{ env.TITLE }}" \
-                     --body "${{ env.CONTENT }}"; then
+                     --label "${LABEL}" \
+                     --title "${TITLE}" \
+                     --body "${CONTENT}"; then
                   echo "Error: Github issue creation failed!"
               fi
           fi

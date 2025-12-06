@@ -1,12 +1,10 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
 	"iter"
 	"net/http"
 
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	"github.com/cyrbil/go-trading212/pkg/trading212/models"
 )
 
 type positionsOperations interface {
@@ -21,5 +19,5 @@ type positions struct {
 }
 
 func (op *positions) GetAllPositions() (iter.Seq[*models.Position], error) {
-	return runOperation[models.Position](op.api, http.MethodGet, internal.GetAllPositions, nil).Items()
+	return runOperation[models.Position](op.api, http.MethodGet, GetAllPositions, nil).Items()
 }
