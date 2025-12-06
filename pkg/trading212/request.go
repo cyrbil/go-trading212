@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -24,6 +23,7 @@ var (
 	errHTTP401    = errors.New("error api return http 401; Bad API key")
 	errHTTP403    = errors.New("error api return http 403; Scope missing for API key")
 	errHTTP408    = errors.New("error api return http 408; Timed-out")
+	errHTTP429    = errors.New("error api return http 429; Rate-Limited")
 )
 
 type knownErrorCode int
@@ -41,28 +41,26 @@ func httpError(code int, status string) error {
 	switch knownErrorCode(code) {
 	case badAPIKey:
 		err = errHTTP401
-		break
 	case scopeMissing:
 		err = errHTTP403
-		break
 	case timeout:
 		err = errHTTP408
-		break
+	case rateLimited:
+		err = errHTTP429
 	default:
 		err = errNon200
-		break
 	}
 
 	return fmt.Errorf("%w (status: %s)", err, status)
 }
 
-// IRequest Request interface
+// IRequest Request interface.
 type IRequest interface {
 	Do() (*json.RawMessage, error)
 	http() *http.Request
 }
 
-// Request API request
+// Request API request.
 type Request struct {
 	//nolint:containedctx
 	Ctx         context.Context
@@ -79,6 +77,8 @@ type requestMaker interface {
 
 // NewRequest build a Request for the API.
 // Prefer to use the available methods instead.
+//
+//nolint:ireturn
 func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Reader) (IRequest, error) {
 	endpoint := api.domain.JoinPath(string(path)).String()
 
@@ -122,8 +122,10 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	response, err := request.api.client.Do(request.httpRequest)
 	if err != nil {
 		err := errors.Join(errAPIRequest, err)
+
 		return nil, err
 	}
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
@@ -144,18 +146,21 @@ func (request *Request) Do() (*json.RawMessage, error) {
 		request.retries++
 		if request.retries < request.maxRetries {
 			time.Sleep(time.Duration(request.retries) * time.Second)
+
 			return request.Do()
 		}
 	}
 
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		err := httpError(response.StatusCode, response.Status)
+
 		return nil, err
 	}
 
 	data, err := io.ReadAll(response.Body)
 	if err != nil {
 		err := errors.Join(errReadingAPI, err)
+
 		return nil, err
 	}
 

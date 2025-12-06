@@ -26,8 +26,10 @@ jobs:
         continue-on-error: true
         env:
           SARIF_REPORTER: "true"
-          DISABLE_LINTERS: >
+          DISABLE_LINTERS: >-
             SPELL_CSPELL
+          GO_REVIVE_CONFIG_FILE: ".configs/revive.toml"
+          GO_GOLANGCI_LINT_CONFIG_FILE: ".configs/.golangci.yml"
 
       # Upload linter artifacts
       - name: "Archive linter artifacts"
@@ -44,8 +46,8 @@ jobs:
         with:
           sarif_file: "megalinter-reports/megalinter-report.sarif"
 
-      # Assert coverage passes threshold
-      - name: "Validate coverage passes threshold"
+      # Assert linter passes
+      - name: "Validate linter passes"
         if: "steps.linter.outcome == 'failure'"
         shell: "bash"
         run: "echo 'Linter return issues' && exit 1"

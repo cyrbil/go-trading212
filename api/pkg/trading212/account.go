@@ -1,7 +1,6 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
-// AccountSummary response type
+// AccountSummary response type.
 type AccountSummary struct {
 	// Primary trading account number.
 	// This is the same account ID you would see in the Trading 212 web or mobile application.

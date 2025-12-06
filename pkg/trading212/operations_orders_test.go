@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -13,6 +12,7 @@ func Test_Orders_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Orders GetAllPendingOrders", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.Order](
 				t,
 				func(api *API) (iter.Seq[*models.Order], error) {
@@ -50,6 +50,7 @@ func Test_Orders_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Orders PlaceLimitOrder", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.Order](
 				t,
 				func(api *API) (*models.Order, error) {
@@ -87,6 +88,7 @@ func Test_Orders_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Orders PlaceMarketOrder", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.Order](
 				t,
 				func(api *API) (*models.Order, error) {
@@ -124,6 +126,7 @@ func Test_Orders_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Orders PlaceStopOrder", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.Order](
 				t,
 				func(api *API) (*models.Order, error) {
@@ -161,6 +164,7 @@ func Test_Orders_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Orders PlaceStopLimitOrder", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.Order](
 				t,
 				func(api *API) (*models.Order, error) {
@@ -198,6 +202,7 @@ func Test_Orders_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Orders CancelOrder", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.Empty](
 				t,
 				func(api *API) (*models.Empty, error) {
@@ -209,6 +214,7 @@ func Test_Orders_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Orders GetPendingOrderByID", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.Order](
 				t,
 				func(api *API) (*models.Order, error) {

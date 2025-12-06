@@ -1,28 +1,40 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import "time"
 
-// PieSummary response type
+// PieSummary response type.
 type PieSummary struct {
-	Cash            float64 `json:"cash"`
+	// Cash.
+	Cash float64 `json:"cash"`
+	// DividendDetails.
 	DividendDetails struct {
-		Gained     float64 `json:"gained"`
-		InCash     float64 `json:"inCash"`
+		// Gained.
+		Gained float64 `json:"gained"`
+		// InCash.
+		InCash float64 `json:"inCash"`
+		// Reinvested.
 		Reinvested float64 `json:"reinvested"`
 	} `json:"dividendDetails"`
-	ID       uint    `json:"id"`
+	// ID.
+	ID uint `json:"id"`
+	// Progress.
 	Progress float64 `json:"progress"`
-	Result   struct {
+	// Result.
+	Result struct {
+		// PriceAvgInvestedValue.
 		PriceAvgInvestedValue float64 `json:"priceAvgInvestedValue"`
-		PriceAvgResult        float64 `json:"priceAvgResult"`
-		PriceAvgResultCoef    float64 `json:"priceAvgResultCoef"`
-		PriceAvgValue         float64 `json:"priceAvgValue"`
+		// PriceAvgResult.
+		PriceAvgResult float64 `json:"priceAvgResult"`
+		// PriceAvgResultCoef.
+		PriceAvgResultCoef float64 `json:"priceAvgResultCoef"`
+		// PriceAvgValue.
+		PriceAvgValue float64 `json:"priceAvgValue"`
 	} `json:"result"`
+	// Status.
 	Status string `json:"status"`
 }
 
-// PieDetails response type
+// PieDetails response type.
 type PieDetails struct {
 	Instruments []struct {
 		CurrentShare  float64 `json:"currentShare"`
@@ -54,7 +66,7 @@ type PieDetails struct {
 	} `json:"settings"`
 }
 
-// PieRequest request type
+// PieRequest request type.
 type PieRequest struct {
 	PieMetaRequest
 
@@ -67,7 +79,7 @@ type PieRequest struct {
 	} `json:"instrumentShares"`
 }
 
-// PieMetaRequest request type
+// PieMetaRequest request type.
 type PieMetaRequest struct {
 	Icon string `json:"icon"`
 	Name string `json:"name"`

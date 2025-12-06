@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -20,6 +19,7 @@ type mockRequestMaker struct {
 	err     error
 }
 
+//nolint:ireturn
 func (mock *mockRequestMaker) NewRequest(_ string, _ internal.APIEndpoint, _ io.Reader) (IRequest, error) {
 	return mock.request, mock.err
 }
@@ -39,10 +39,15 @@ func (mock *mockIRequest) http() *http.Request {
 }
 
 func Test_runOperation(t *testing.T) {
+	t.Parallel()
+
 	t.Run(
 		"runOperation should return an error when the api fails to build request", func(t *testing.T) {
+			t.Parallel()
+
 			api := &mockRequestMaker{err: errors.New("mocked error")}
 			response := runOperation[any](api, "", "", nil)
+
 			if response.err == nil {
 				t.Error("expected error, got nil")
 			}
@@ -51,8 +56,11 @@ func Test_runOperation(t *testing.T) {
 
 	t.Run(
 		"runOperation should return an error when the api fails to build request", func(t *testing.T) {
+			t.Parallel()
+
 			api := &mockRequestMaker{request: &mockIRequest{err: errors.New("mocked error")}}
 			response := runOperation[any](api, "", "", nil)
+
 			if response.err == nil {
 				t.Error("expected error, got nil")
 			}
@@ -77,17 +85,24 @@ func newMockAPI(handler http.Handler) (*API, func(), error) {
 
 	return mockAPI, ts.Close, nil
 }
+
+//nolint:ireturn
 func validateOperation[T any](t *testing.T, operation func(*API) (T, error), mockData string) T {
+	t.Helper()
 	mockAPI, terminate, err := newMockAPI(
 		http.HandlerFunc(
 			func(w http.ResponseWriter, _ *http.Request) {
-				w.Header().Set("Content-Type", "application/json; charset=utf-8")
-				w.Header().Set(internal.RateLimitHeaderLimit, "10")
-				w.Header().Set(internal.RateLimitHeaderPeriod, "10")
-				w.Header().Set(internal.RateLimitHeaderRemaining, "10")
-				w.Header().Set(internal.RateLimitHeaderReset, "0")
-				w.Header().Set(internal.RateLimitHeaderUsed, "0")
+				headers := w.Header()
+
+				headers.Set("Content-Type", "application/json; charset=utf-8")
+				headers.Set(internal.RateLimitHeaderLimit, "10")
+				headers.Set(internal.RateLimitHeaderPeriod, "10")
+				headers.Set(internal.RateLimitHeaderRemaining, "10")
+				headers.Set(internal.RateLimitHeaderReset, "0")
+				headers.Set(internal.RateLimitHeaderUsed, "0")
+
 				w.WriteHeader(http.StatusOK)
+
 				_, err := fmt.Fprintln(w, mockData)
 				if err != nil {
 					t.Fatalf("MockHTTP Write() error = %v", err)
@@ -110,13 +125,18 @@ func validateOperation[T any](t *testing.T, operation func(*API) (T, error), moc
 }
 
 func validateOperationObject[T any](t *testing.T, operation func(*API) (*T, error), mockData string) {
+	t.Helper()
+
 	data := validateOperation[*T](t, operation, mockData)
+
 	if data == nil {
 		t.Errorf("Error calling operation; data is nil")
 	}
 }
 
 func validateOperationItems[T any](t *testing.T, operation func(*API) (iter.Seq[*T], error), mockData string) {
+	t.Helper()
+
 	data := validateOperation[iter.Seq[*T]](t, operation, mockData)
 	if data == nil {
 		t.Fatalf("Error calling operation; iterator is nil")

@@ -53,7 +53,7 @@ jobs:
         with:
           # config
           profile: "cover.out"
-          threshold-total: 50
+          threshold-total: 95
           # badges
           git-branch: "${{ github.event_name == 'push' && 'badges' || '' }}"
           git-token: "${{ github.event_name == 'push' && secrets.GITHUB_TOKEN || '' }}"

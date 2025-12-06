@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -18,7 +17,7 @@ const (
 	RateLimitHeaderPeriod = "x-ratelimit-period"
 	// RateLimitHeaderRemaining x-ratelimit-remaining: The number of requests you have left in the current period.
 	RateLimitHeaderRemaining = "x-ratelimit-remaining"
-	// RateLimitHeaderReset x-ratelimit-reset: A Unix timestamp indicating the exact time when the limit will be fully reset.
+	// RateLimitHeaderReset x-ratelimit-reset: A Unix timestamp indicating the exact time when the limit will be reset.
 	RateLimitHeaderReset = "x-ratelimit-reset"
 	// RateLimitHeaderUsed x-ratelimit-used: The number of requests you have already made in the current period.
 	RateLimitHeaderUsed = "x-ratelimit-used"

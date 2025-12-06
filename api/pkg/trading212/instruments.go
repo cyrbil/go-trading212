@@ -1,9 +1,8 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import "time"
 
-// ExchangeMetadata response type
+// ExchangeMetadata response type.
 type ExchangeMetadata struct {
 	ID               uint   `json:"id"`
 	Name             string `json:"name"`
@@ -18,21 +17,26 @@ type ExchangeMetadata struct {
 	} `json:"workingSchedules"`
 }
 
-// Instrument response type
+// Instrument response type.
 type Instrument struct {
-	// On the platform since
+	// On the platform since.
 	AddedOn time.Time `json:"addedOn"`
-	// ISO 4217
-	CurrencyCode    string  `json:"currencyCode"`
-	ExtendedHours   bool    `json:"extendedHours"`
-	Isin            string  `json:"isin"`
+	// ISO 4217.
+	CurrencyCode string `json:"currencyCode"`
+	// ExtendedHours.
+	ExtendedHours bool `json:"extendedHours"`
+	// Isin.
+	Isin string `json:"isin"`
+	// MaxOpenQuantity.
 	MaxOpenQuantity float64 `json:"maxOpenQuantity"`
-	Name            string  `json:"name"`
-	ShortName       string  `json:"shortName"`
-	// Unique identifier
+	// Name.
+	Name string `json:"name"`
+	// ShortName.
+	ShortName string `json:"shortName"`
+	// Unique identifier.
 	Ticker string `json:"ticker"`
-	// Enum "CRYPTOCURRENCY", "ETF", "FOREX", "FUTURES", "INDEX", "STOCK", "WARRANT", "CRYPTO", "CVR", "CORPACT"
+	// Enum "CRYPTOCURRENCY", "ETF", "FOREX", "FUTURES", "INDEX", "STOCK", "WARRANT", "CRYPTO", "CVR", "CORPACT".
 	Type string `json:"type"`
-	// Get items in the /exchanges endpoint
+	// Get items in the /exchanges endpoint.
 	WorkingScheduleID uint `json:"workingScheduleId"`
 }

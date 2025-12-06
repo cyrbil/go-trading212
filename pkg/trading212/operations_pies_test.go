@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -13,6 +12,7 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies FetchAllPies", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.PieSummary](
 				t,
 				func(api *API) (iter.Seq[*models.PieSummary], error) {
@@ -42,6 +42,7 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies CreatePie", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.PieDetails](
 				t,
 				func(api *API) (*models.PieDetails, error) {
@@ -88,6 +89,7 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies DeletePie", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.Empty](
 				t,
 				func(api *API) (*models.Empty, error) {
@@ -99,6 +101,7 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies FetchPie", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.PieDetails](
 				t,
 				func(api *API) (*models.PieDetails, error) {
@@ -144,6 +147,7 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies UpdatePie", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.PieDetails](
 				t,
 				func(api *API) (*models.PieDetails, error) {
@@ -189,6 +193,7 @@ func Test_Pies_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Pies DuplicatePies", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.PieDetails](
 				t,
 				func(api *API) (*models.PieDetails, error) {

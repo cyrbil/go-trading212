@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -13,6 +12,7 @@ func Test_Instruments_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Instruments GetExchangesMetadata", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.ExchangeMetadata](
 				t,
 				func(api *API) (iter.Seq[*models.ExchangeMetadata], error) {
@@ -36,6 +36,7 @@ func Test_Instruments_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Instruments GetAllAvailableInstruments", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.Instrument](
 				t,
 				func(api *API) (iter.Seq[*models.Instrument], error) {

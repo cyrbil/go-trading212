@@ -14,6 +14,24 @@ linters:
   disable:
     - depguard
     - revive
+    - testpackage
+
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - gocyclo
+          - cyclop
+          - funlen
+          - errcheck
+          - err113
+          - dupl
+          - gosec
+          - wsl
+          - wsl_v5
+          - varnamelen
+          - exhaustruct
+          - nlreturn
 
 formatters:
   # Enable specific formatter.

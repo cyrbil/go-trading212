@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -12,6 +11,7 @@ func Test_Account_Operations(t *testing.T) {
 
 	t.Run(
 		"Test Account.GetAccountSummary()", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.AccountSummary](
 				t,
 				func(api *API) (*models.AccountSummary, error) {
