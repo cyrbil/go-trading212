@@ -6,6 +6,11 @@
 [![Build Status][build-badge]][build]
 [![coded-by-badge][coded-by-badge]][repo-commits]
 
+[![Release Status][release-badge]][release]
+[![Coverage Status][coverage-badge]][coverage]
+[![Testing Status][testing-badge]][testing]
+
+
 A comprehensive Go client library for interacting with the [Trading212 Rest API][trading212-docs].
 This library provides a type-safe, idiomatic Go interface for managing your Trading212 account, 
 placing orders, monitoring positions, and accessing historical trading data.
@@ -215,8 +220,12 @@ This library is not affiliated with, endorsed by, or sponsored by Trading212. Us
 [license]: ./LICENSE
 [go-version-badge]: https://img.shields.io/badge/go-1.23+-00ADD8.svg
 [go-version]: https://golang.org
-[build-badge]: https://github.com/cyrbil/go-trading212/actions/workflows/go-build.yml/badge.svg
-[build]: https://github.com/cyrbil/go-trading212/actions/workflows/go-build.yml
+[coverage]: https://github.com/cyrbil/go-trading212/actions/workflows/coverage.yml
+[coverage-badge]: https://raw.githubusercontent.com/cyrbil/go-trading212/badges/.badges/main/coverage.svg?branch=main&event=schedule?branch=main&event=push
+[testing]: https://github.com/cyrbil/go-trading212/actions/workflows/testing.yml
+[testing-badge]: https://github.com/cyrbil/go-trading212/actions/workflows/testing.yml/badge.svg?branch=main&event=schedule
+[release]: https://github.com/cyrbil/go-trading212/actions/workflows/release.yml
+[release-badge]: https://github.com/cyrbil/go-trading212/actions/workflows/release.yml/badge.svg?branch=main&event=schedule
 [trading212-docs]: https://docs.trading212.com/api
 [coded-by-badge]: https://img.shields.io/badge/coded%20by-humans%20%F0%9F%92%96-blue?style=social
 [repo-commits]: https://github.com/cyrbil/go-trading212/commits/main/
