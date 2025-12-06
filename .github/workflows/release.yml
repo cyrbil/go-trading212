@@ -39,10 +39,8 @@ jobs:
           DRY_RUN: "true"
           TAG_CONTEXT: "branch"
 
-      - name: "Find next version"
-        uses: "anothrNick/github-tag-action@1.75.0"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          TAG_PREFIX: "v"
-          TAG_MESSAGE: "Release ${{ steps.semver.outputs.new_tag }}"
-          TAG_CONTEXT: "branch"
+      - name: "Release tag"
+        shell: "bash"
+        run: |
+          git tag -s "${{ steps.semver.outputs.new_tag }}" -m "Release ${{ steps.semver.outputs.new_tag }}"
+          git push --signed origin tag "${{ steps.semver.outputs.new_tag }}"
