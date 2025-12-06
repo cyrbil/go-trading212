@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -10,11 +11,13 @@ import (
 func Test_Positions_Operations(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Test Positions GetAllPositions", func(t *testing.T) {
-		validateOperationItems[models.Position](t,
-			func(api *API) (iter.Seq[*models.Position], error) {
-				return api.Positions.GetAllPositions()
-			}, `
+	t.Run(
+		"Test Positions GetAllPositions", func(t *testing.T) {
+			validateOperationItems[models.Position](
+				t,
+				func(api *API) (iter.Seq[*models.Position], error) {
+					return api.Positions.GetAllPositions()
+				}, `
 			[{
 				"averagePricePaid": 0,
 				"createdAt": "2019-08-24T14:15:22Z",
@@ -36,6 +39,8 @@ func Test_Positions_Operations(t *testing.T) {
 					"unrealizedProfitLoss": 0
 				}
 			}]
-		`)
-	})
+		`,
+			)
+		},
+	)
 }

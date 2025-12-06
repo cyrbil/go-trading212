@@ -1,7 +1,9 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import "time"
 
+// Dividend response type
 type Dividend struct {
 	// Amount, in account's primary currency.
 	Amount int `json:"amount"`
@@ -63,8 +65,9 @@ type Dividend struct {
 	Type string `json:"type"`
 }
 
-type ReportId struct {
-	ReportId uint `json:"reportId"`
+// ReportID response type
+type ReportID struct {
+	ReportID uint `json:"reportId"`
 }
 
 type reportDataIncluded struct {
@@ -81,8 +84,9 @@ type reportTimeRange struct {
 	TimeTo   time.Time `json:"timeTo"`
 }
 
+// Report response type
 type Report struct {
-	ReportId
+	ReportID
 	reportDataIncluded
 	reportTimeRange
 
@@ -90,17 +94,19 @@ type Report struct {
 	Status       string `json:"status"`
 }
 
+// ReportRequest request type
 type ReportRequest struct {
 	reportDataIncluded
 	reportTimeRange
 }
 
+// OrderFill response type
 type OrderFill struct {
 	Order `json:"order"`
 
 	Fill struct {
 		FilledAt      time.Time `json:"filledAt"`
-		Id            int       `json:"id"`
+		ID            int       `json:"id"`
 		Price         int       `json:"price"`
 		Quantity      int       `json:"quantity"`
 		TradingMethod string    `json:"tradingMethod"`
@@ -120,6 +126,7 @@ type OrderFill struct {
 	} `json:"fill"`
 }
 
+// Transaction response type
 type Transaction struct {
 	Amount    int       `json:"amount"`
 	Currency  string    `json:"currency"`

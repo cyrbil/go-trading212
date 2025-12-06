@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -49,7 +50,7 @@ type operationRequestReport interface {
 	// you can use to track the status of the generation process using the GET
 	// /history/exports endpoint.
 	// See: https://docs.trading212.com/api/historical-events/requestreport
-	RequestReport(req models.ReportRequest) (*models.ReportId, error)
+	RequestReport(req models.ReportRequest) (*models.ReportID, error)
 }
 
 type historicalEventsOperations interface {
@@ -80,6 +81,6 @@ func (op *historicalEvents) ListReports() (iter.Seq[*models.Report], error) {
 	return runOperation[models.Report](op.api, http.MethodGet, internal.ListReports, nil).Items()
 }
 
-func (op *historicalEvents) RequestReport(req models.ReportRequest) (*models.ReportId, error) {
-	return runOperation[models.ReportId](op.api, http.MethodPost, internal.RequestReport, req).Object()
+func (op *historicalEvents) RequestReport(req models.ReportRequest) (*models.ReportID, error) {
+	return runOperation[models.ReportID](op.api, http.MethodPost, internal.RequestReport, req).Object()
 }

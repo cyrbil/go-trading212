@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -10,7 +11,7 @@ import (
 func runOperation[T any](api requestMaker, method string, endpoint internal.APIEndpoint, body any) *Response[T] {
 	var requestBodyReader io.Reader
 	if body != nil {
-		requestBodyReader = newJsonBody(body)
+		requestBodyReader = newJSONBody(body)
 	}
 
 	request, err := api.NewRequest(method, endpoint, requestBodyReader)

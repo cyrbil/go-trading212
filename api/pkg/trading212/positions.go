@@ -1,7 +1,9 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import "time"
 
+// Position response type
 type Position struct {
 	AveragePricePaid float64   `json:"averagePricePaid"`
 	CreatedAt        time.Time `json:"createdAt"`

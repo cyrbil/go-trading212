@@ -1,5 +1,7 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
+// APIEndpoint type
 type APIEndpoint string
 
 const version APIEndpoint = "/api/v0"

@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -104,7 +105,7 @@ func Test_NewAPI(t *testing.T) {
 				apiKey:    "",
 				apiSecret: "bar",
 			},
-			err: errEmptyApiKey,
+			err: errEmptyAPIKey,
 		},
 		{
 			name: "Validate NewAPI() with invalid secret",
@@ -113,25 +114,29 @@ func Test_NewAPI(t *testing.T) {
 				apiKey:    "foo",
 				apiSecret: "",
 			},
-			err: errEmptyApiSecret,
+			err: errEmptyAPISecret,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewAPI(tt.args.domain, tt.args.apiKey, tt.args.apiSecret)
-			if tt.err != nil {
-				if !errors.Is(err, tt.err) {
-					t.Errorf("NewAPI() returned an unexpected error; expect: %v, got: %v", tt.err, err)
+		t.Run(
+			tt.name, func(t *testing.T) {
+				got, err := NewAPI(tt.args.domain, tt.args.apiKey, tt.args.apiSecret)
+				if tt.err != nil {
+					if !errors.Is(err, tt.err) {
+						t.Errorf("NewAPI() returned an unexpected error; expect: %v, got: %v", tt.err, err)
+					}
+					return
 				}
-				return
-			}
 
-			validateAPI("NewAPI() api validation error", t, got, nil)
-			if got.domain.String() != string(tt.args.domain) {
-				t.Errorf("NewAPIDemo() should return the given domain; expect: %s, got: %s", tt.args.domain, got.domain)
-			}
-		})
+				validateAPI("NewAPI() api validation error", t, got, nil)
+				if got.domain.String() != string(tt.args.domain) {
+					t.Errorf(
+						"NewAPIDemo() should return the given domain; expect: %s, got: %s", tt.args.domain, got.domain,
+					)
+				}
+			},
+		)
 	}
 }
 
@@ -160,7 +165,7 @@ func Test_NewAPIDemo(t *testing.T) {
 				apiKey:    "",
 				apiSecret: "bar",
 			},
-			err: errEmptyApiKey,
+			err: errEmptyAPIKey,
 		},
 		{
 			name: "Validate NewAPIDemo() with invalid secret",
@@ -168,25 +173,27 @@ func Test_NewAPIDemo(t *testing.T) {
 				apiKey:    "foo",
 				apiSecret: "",
 			},
-			err: errEmptyApiSecret,
+			err: errEmptyAPISecret,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewAPIDemo(tt.args.apiKey, tt.args.apiSecret)
-			if err != nil {
-				if !errors.Is(err, tt.err) {
-					t.Errorf("NewAPIDemo() returned an unexpected error; expect: %v, got: %v", tt.err, err)
+		t.Run(
+			tt.name, func(t *testing.T) {
+				got, err := NewAPIDemo(tt.args.apiKey, tt.args.apiSecret)
+				if err != nil {
+					if !errors.Is(err, tt.err) {
+						t.Errorf("NewAPIDemo() returned an unexpected error; expect: %v, got: %v", tt.err, err)
+					}
+					return
 				}
-				return
-			}
 
-			validateAPI("NewAPIDemo() api validation error", t, got, nil)
-			if got.domain.String() != string(APIURLDemo) {
-				t.Errorf("NewAPIDemo() should return the Demo domain")
-			}
-		})
+				validateAPI("NewAPIDemo() api validation error", t, got, nil)
+				if got.domain.String() != string(apiURLDemo) {
+					t.Errorf("NewAPIDemo() should return the Demo domain")
+				}
+			},
+		)
 	}
 }
 
@@ -215,7 +222,7 @@ func Test_NewAPILive(t *testing.T) {
 				apiKey:    "",
 				apiSecret: "bar",
 			},
-			err: errEmptyApiKey,
+			err: errEmptyAPIKey,
 		},
 		{
 			name: "Validate NewAPILive() with invalid secret",
@@ -223,24 +230,26 @@ func Test_NewAPILive(t *testing.T) {
 				apiKey:    "foo",
 				apiSecret: "",
 			},
-			err: errEmptyApiSecret,
+			err: errEmptyAPISecret,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewAPILive(tt.args.apiKey, tt.args.apiSecret)
-			if err != nil {
-				if !errors.Is(err, tt.err) {
-					t.Errorf("NewAPILive() returned an unexpected error; expect: %v, got: %v", tt.err, err)
+		t.Run(
+			tt.name, func(t *testing.T) {
+				got, err := NewAPILive(tt.args.apiKey, tt.args.apiSecret)
+				if err != nil {
+					if !errors.Is(err, tt.err) {
+						t.Errorf("NewAPILive() returned an unexpected error; expect: %v, got: %v", tt.err, err)
+					}
+					return
 				}
-				return
-			}
 
-			validateAPI("NewAPILive() api validation error", t, got, nil)
-			if got.domain.String() != string(APIURLLive) {
-				t.Errorf("NewAPILive() should return the Live domain")
-			}
-		})
+				validateAPI("NewAPILive() api validation error", t, got, nil)
+				if got.domain.String() != string(apiURLLive) {
+					t.Errorf("NewAPILive() should return the Live domain")
+				}
+			},
+		)
 	}
 }

@@ -1,5 +1,4 @@
 ---
-
 name: "Release workflow"
 
 on:
@@ -8,13 +7,13 @@ on:
       - "main"
 
 permissions:
-  contents: "write"  # for tag
+  contents: "write" # for tag
 
 jobs:
   release:
     name: "Release ${{ github.event_name }}"
     environment: "Release"
-    runs-on: [ "ubuntu-latest" ]
+    runs-on: ["ubuntu-latest"]
     steps:
       - name: "Checkout Code"
         uses: "actions/checkout@v6.0.0"

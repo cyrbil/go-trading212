@@ -1,3 +1,4 @@
+// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -36,6 +37,7 @@ func headerConversionError(header string, value string) error {
 	return fmt.Errorf("%w: header %v with value %v is not an integer", errHeaderConversion, header, value)
 }
 
+// APIRateLimits rate-limits.
 type APIRateLimits struct {
 	// Limit x-ratelimit-limit: The total number of requests allowed in the current time period.
 	Limit uint64

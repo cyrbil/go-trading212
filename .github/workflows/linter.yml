@@ -1,5 +1,4 @@
 ---
-
 name: "Linter workflow"
 
 on:
@@ -9,12 +8,12 @@ on:
 
 permissions:
   contents: "read"
-  pull-requests: "write"  # for comment
+  pull-requests: "write" # for comment
 
 jobs:
   linter:
     name: "Linter ${{ github.event_name }}"
-    runs-on: [ "ubuntu-latest" ]
+    runs-on: ["ubuntu-latest"]
     steps:
       # Checkout code
       - name: "Checkout project"
@@ -23,17 +22,18 @@ jobs:
       # Run linter
       - name: "Run static analysis"
         id: linter
-        uses: "oxsecurity/megalinter@v8"
+        uses: "oxsecurity/megalinter/flavors/go@v9.2.0"
         continue-on-error: true
         env:
           SARIF_REPORTER: "true"
+          DISABLE_LINTERS: >
+            SPELL_CSPELL
 
       # Upload linter artifacts
       - name: "Archive linter artifacts"
         uses: "actions/upload-artifact@v4"
         with:
           name: "linter reports"
-          include-hidden-files: "true"
           path: |
             megalinter-reports
             mega-linter.log

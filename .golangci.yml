@@ -13,7 +13,6 @@ linters:
   # Disable specific linters.
   disable:
     - depguard
-    - iface
     - revive
 
 formatters:
