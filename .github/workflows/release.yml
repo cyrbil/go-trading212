@@ -31,7 +31,7 @@ jobs:
           git_tag_gpgsign: true
 
       - name: "Find next version"
-        uses: "anothrNick/github-tag-action@v1.75.0"
+        uses: "anothrNick/github-tag-action@1.75.0"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           TAG_PREFIX: "v"
