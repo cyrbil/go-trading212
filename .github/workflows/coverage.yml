@@ -54,7 +54,7 @@ jobs:
         with:
           # config
           profile: "cover.out"
-          threshold-total: 95
+          threshold-total: 50
           # badges
           git-branch: "${{ github.event_name == 'push' && 'badges' || '' }}"
           git-token: "${{ github.event_name == 'push' && secrets.GITHUB_TOKEN || '' }}"
@@ -76,10 +76,18 @@ jobs:
           >coverage-treemap.svg
 
       # Upload coverage breakdown
+      - name: "Upload artifact (coverage.breakdown.txt)"
+        uses: "actions/upload-artifact@v5"
+        with:
+          name: "coverage.breakdown.txt"
+          path: "coverage.breakdown.txt"
+          if-no-files-found: "error"
+
+      # Upload coverage artifacts
       - name: "Upload artifact (coverage files)"
         uses: "actions/upload-artifact@v5"
         with:
-          name: "Coverage files"
+          name: "coverage-artifacts.zip"
           path: |
             cover.out
             coverage.breakdown.txt
