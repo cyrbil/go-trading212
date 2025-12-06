@@ -55,8 +55,8 @@ jobs:
           profile: "cover.out"
           threshold-total: 95
           # badges
-          git-branch: "badges"
-          git-token: "${{ secrets.GITHUB_TOKEN }}"
+          git-branch: "${{ github.event_name == 'push' && 'badges' || '' }}"
+          git-token: "${{ github.event_name == 'push' && secrets.GITHUB_TOKEN || '' }}"
           # diff
           breakdown-file-name: "coverage.breakdown.txt"
           diff-base-breakdown-file-name: |-
