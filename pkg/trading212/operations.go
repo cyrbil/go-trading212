@@ -1,14 +1,11 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
 	"io"
-
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
 // helper function for the operations.
-func runOperation[T any](api requestMaker, method string, endpoint internal.APIEndpoint, body any) *Response[T] {
+func runOperation[T any](api requestMaker, method string, endpoint APIEndpoint, body any) *Response[T] {
 	var requestBodyReader io.Reader
 	if body != nil {
 		requestBodyReader = newJSONBody(body)

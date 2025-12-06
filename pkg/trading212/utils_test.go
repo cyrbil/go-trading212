@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -6,15 +5,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	models "github.com/cyrbil/go-trading212/pkg/trading212/models"
 	"reflect"
 	"testing"
-
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 )
 
 func Test_SecureString(t *testing.T) {
+	t.Parallel()
+
 	secureString := SecureString("foobar")
 
+	//nolint:staticcheck
 	secureStringFmt := fmt.Sprintf("%s", secureString)
 	if secureStringFmt == "foobar" {
 		t.Errorf("SecureString value is unprotected from format, got: %s", secureStringFmt)
@@ -34,6 +35,8 @@ func Test_SecureString(t *testing.T) {
 }
 
 func Test_jsonBody_Read(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		buf []byte
 	}
@@ -98,6 +101,8 @@ func Test_jsonBody_Read(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(
 			tt.name, func(t *testing.T) {
+				t.Parallel()
+
 				got, err := tt.jsonBody.Read(tt.args.buf)
 				if err != nil {
 					if !errors.Is(err, tt.wantErr) {

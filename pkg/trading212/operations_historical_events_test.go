@@ -1,11 +1,9 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
+	models "github.com/cyrbil/go-trading212/pkg/trading212/models"
 	"iter"
 	"testing"
-
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 )
 
 func Test_HistoricalEvents_Operations(t *testing.T) {
@@ -13,6 +11,7 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 
 	t.Run(
 		"Test HistoricalEvents GetPaidOutDividends", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.Dividend](
 				t,
 				func(api *API) (iter.Seq[*models.Dividend], error) {
@@ -46,6 +45,7 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 
 	t.Run(
 		"Test HistoricalEvents GetHistoricalOrders", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.OrderFill](
 				t,
 				func(api *API) (iter.Seq[*models.OrderFill], error) {
@@ -108,6 +108,7 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 
 	t.Run(
 		"Test HistoricalEvents GetTransactions", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.Transaction](
 				t,
 				func(api *API) (iter.Seq[*models.Transaction], error) {
@@ -130,6 +131,7 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 
 	t.Run(
 		"Test HistoricalEvents ListReports", func(t *testing.T) {
+			t.Parallel()
 			validateOperationItems[models.Report](
 				t,
 				func(api *API) (iter.Seq[*models.Report], error) {
@@ -155,6 +157,7 @@ func Test_HistoricalEvents_Operations(t *testing.T) {
 
 	t.Run(
 		"Test HistoricalEvents RequestReport", func(t *testing.T) {
+			t.Parallel()
 			validateOperationObject[models.ReportID](
 				t,
 				func(api *API) (*models.ReportID, error) {

@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -12,14 +11,14 @@ import (
 // Used to avoid leaking credentials when logging.
 type SecureString string
 
-// String format
+// String format.
 func (s SecureString) String() string {
 	return "[REDACTED]"
 }
 
-// MarshalJSON format
+// MarshalJSON format.
 func (s SecureString) MarshalJSON() ([]byte, error) {
-	return json.Marshal(s.String())
+	return json.Marshal("[REDACTED]") //nolint:wrapcheck
 }
 
 var errConversionBody = errors.New("error converting request body")
@@ -41,7 +40,7 @@ func newJSONBody(data any) *jsonBody {
 	}
 }
 
-// Read as json
+// Read as json.
 func (b jsonBody) Read(buf []byte) (int, error) {
 	jsonData, err := b.marshaller(b.data)
 	if err != nil {
@@ -52,5 +51,6 @@ func (b jsonBody) Read(buf []byte) (int, error) {
 	if err != nil && !errors.Is(err, io.EOF) {
 		return read, errors.Join(errConversionBody, err)
 	}
+
 	return read, err
 }

@@ -1,5 +1,4 @@
-// Package trading212 github.com/cyrbil/go-trading212
-package trading212
+package models
 
 import "encoding/json"
 

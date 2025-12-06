@@ -1,0 +1,8 @@
+---
+# https://github.com/anchore/grype#configuration
+
+ignore:
+  - vulnerability: "GHSA-5xr6-xhww-33m4-dawidd6/action-download-artifact"
+    include-aliases: false
+    reason: "False positive due hash usage masking fixed version"
+    fix-state: "wont-fix"

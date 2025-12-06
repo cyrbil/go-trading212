@@ -13,15 +13,16 @@ jobs:
   release:
     name: "Release ${{ github.event_name }}"
     environment: "Release"
-    runs-on: ["ubuntu-latest"]
+    runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout Code"
-        uses: "actions/checkout@v6.0.0"
+        uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8"
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: "Import GPG key"
-        uses: "crazy-max/ghaction-import-gpg@v6"
+        uses: "crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec"
         with:
           gpg_private_key: "${{ secrets.RELEASER_GPG_KEY }}"
           passphrase: "${{ secrets.RELEASER_GPG_PASSPHRASE }}"
@@ -31,7 +32,7 @@ jobs:
 
       - name: "Find next version"
         id: "semver"
-        uses: "anothrNick/github-tag-action@1.75.0"
+        uses: "anothrNick/github-tag-action@4ed44965e0db8dab2b466a16da04aec3cc312fd8"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           TAG_PREFIX: "v"
@@ -43,6 +44,8 @@ jobs:
         shell: "bash"
         run: |
           git tag \
-              -s "${{ steps.semver.outputs.new_tag }}" \
-              -m "Release ${{ steps.semver.outputs.new_tag }}"
-          git push origin tag "${{ steps.semver.outputs.new_tag }}"
+              -s "${STEPS_SEMVER_OUTPUTS_NEW_TAG}" \
+              -m "Release ${STEPS_SEMVER_OUTPUTS_NEW_TAG}"
+          git push origin tag "${STEPS_SEMVER_OUTPUTS_NEW_TAG}"
+        env:
+          STEPS_SEMVER_OUTPUTS_NEW_TAG: ${{ steps.semver.outputs.new_tag }}

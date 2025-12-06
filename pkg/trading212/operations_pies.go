@@ -1,4 +1,3 @@
-// Package trading212 github.com/cyrbil/go-trading212
 package trading212
 
 import (
@@ -6,8 +5,7 @@ import (
 	"iter"
 	"net/http"
 
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	"github.com/cyrbil/go-trading212/pkg/trading212/models"
 )
 
 type operationFetchAllPies interface {
@@ -66,33 +64,33 @@ type pies struct {
 }
 
 func (op *pies) FetchAllPies() (iter.Seq[*models.PieSummary], error) {
-	return runOperation[models.PieSummary](op.api, http.MethodGet, internal.GetAllPies, nil).Items()
+	return runOperation[models.PieSummary](op.api, http.MethodGet, GetAllPies, nil).Items()
 }
 
 func (op *pies) CreatePie(req models.PieRequest) (*models.PieDetails, error) {
-	return runOperation[models.PieDetails](op.api, http.MethodPost, internal.CreatePie, req).Object()
+	return runOperation[models.PieDetails](op.api, http.MethodPost, CreatePie, req).Object()
 }
 
 func (op *pies) DeletePie(id uint) error {
-	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.DeletePie, id))
+	endpoint := APIEndpoint(fmt.Sprintf("%s/%d", DeletePie, id))
 
 	return runOperation[models.Empty](op.api, http.MethodDelete, endpoint, nil).err
 }
 
 func (op *pies) FetchPie(id uint) (*models.PieDetails, error) {
-	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.FetchPie, id))
+	endpoint := APIEndpoint(fmt.Sprintf("%s/%d", FetchPie, id))
 
 	return runOperation[models.PieDetails](op.api, http.MethodGet, endpoint, nil).Object()
 }
 
 func (op *pies) UpdatePie(id uint, req models.PieRequest) (*models.PieDetails, error) {
-	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.UpdatePie, id))
+	endpoint := APIEndpoint(fmt.Sprintf("%s/%d", UpdatePie, id))
 
 	return runOperation[models.PieDetails](op.api, http.MethodPost, endpoint, req).Object()
 }
 
 func (op *pies) DuplicatePies(id uint, req models.PieMetaRequest) (*models.PieDetails, error) {
-	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d/duplicate", internal.DuplicatePie, id))
+	endpoint := APIEndpoint(fmt.Sprintf("%s/%d/duplicate", DuplicatePie, id))
 
 	return runOperation[models.PieDetails](op.api, http.MethodPost, endpoint, req).Object()
 }
