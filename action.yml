@@ -1,0 +1,16 @@
+name: "MegaLinter Custom Flavor"
+author: "cyrbil"
+description: "MegaLinter Custom Flavor"
+outputs:
+  has_updated_sources:
+    description: "0 if no source file has been updated, 1 if source files has been updated"
+runs:
+  using: "docker"
+  # You can manually update the Docker image version here, or use the latest tag
+  image: "docker://ghcr.io/cyrbil/go-trading212/megalinter-custom-flavor:latest"
+  args:
+    - "-v"
+    - "/var/run/docker.sock:/var/run/docker.sock:rw"
+branding:
+  icon: "check"
+  color: "green"
