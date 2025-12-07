@@ -4,8 +4,7 @@ import (
 	"iter"
 	"net/http"
 
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	"github.com/cyrbil/go-trading212/pkg/trading212/models"
 )
 
 type operationGetExchangesMetadata interface {
@@ -32,9 +31,9 @@ type instruments struct {
 }
 
 func (op *instruments) GetExchangesMetadata() (iter.Seq[*models.ExchangeMetadata], error) {
-	return runOperation[models.ExchangeMetadata](op.api, http.MethodGet, internal.GetExchangesMetadata, nil).Items()
+	return runOperation[models.ExchangeMetadata](op.api, http.MethodGet, GetExchangesMetadata, nil).Items()
 }
 
 func (op *instruments) GetAllAvailableInstruments() (iter.Seq[*models.Instrument], error) {
-	return runOperation[models.Instrument](op.api, http.MethodGet, internal.GetAllAvailableInstruments, nil).Items()
+	return runOperation[models.Instrument](op.api, http.MethodGet, GetAllAvailableInstruments, nil).Items()
 }

@@ -4,8 +4,7 @@ import (
 	"iter"
 	"net/http"
 
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	"github.com/cyrbil/go-trading212/pkg/trading212/models"
 )
 
 type operationGetPaidOutDividends interface {
@@ -65,21 +64,21 @@ type historicalEvents struct {
 }
 
 func (op *historicalEvents) GetPaidOutDividends() (iter.Seq[*models.Dividend], error) {
-	return runOperation[models.Dividend](op.api, http.MethodGet, internal.GetDividends, nil).Items()
+	return runOperation[models.Dividend](op.api, http.MethodGet, GetDividends, nil).Items()
 }
 
 func (op *historicalEvents) GetHistoricalOrders() (iter.Seq[*models.OrderFill], error) {
-	return runOperation[models.OrderFill](op.api, http.MethodGet, internal.GetHistoricalOrders, nil).Items()
+	return runOperation[models.OrderFill](op.api, http.MethodGet, GetHistoricalOrders, nil).Items()
 }
 
 func (op *historicalEvents) GetTransactions() (iter.Seq[*models.Transaction], error) {
-	return runOperation[models.Transaction](op.api, http.MethodGet, internal.GetTransactions, nil).Items()
+	return runOperation[models.Transaction](op.api, http.MethodGet, GetTransactions, nil).Items()
 }
 
 func (op *historicalEvents) ListReports() (iter.Seq[*models.Report], error) {
-	return runOperation[models.Report](op.api, http.MethodGet, internal.ListReports, nil).Items()
+	return runOperation[models.Report](op.api, http.MethodGet, ListReports, nil).Items()
 }
 
 func (op *historicalEvents) RequestReport(req models.ReportRequest) (*models.ReportID, error) {
-	return runOperation[models.ReportID](op.api, http.MethodPost, internal.RequestReport, req).Object()
+	return runOperation[models.ReportID](op.api, http.MethodPost, RequestReport, req).Object()
 }

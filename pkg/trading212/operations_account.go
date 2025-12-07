@@ -3,8 +3,7 @@ package trading212
 import (
 	"net/http"
 
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	"github.com/cyrbil/go-trading212/pkg/trading212/models"
 )
 
 type accountOperations interface {
@@ -20,5 +19,5 @@ type account struct {
 }
 
 func (op *account) GetAccountSummary() (*models.AccountSummary, error) {
-	return runOperation[models.AccountSummary](op.api, http.MethodGet, internal.GetAccountSummary, nil).Object()
+	return runOperation[models.AccountSummary](op.api, http.MethodGet, GetAccountSummary, nil).Object()
 }

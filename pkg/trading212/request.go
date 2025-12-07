@@ -9,8 +9,6 @@ import (
 	"log/slog"
 	"net/http"
 	"time"
-
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
 const defaultMaxRetries = 10
@@ -72,14 +70,14 @@ type Request struct {
 }
 
 type requestMaker interface {
-	NewRequest(method string, path internal.APIEndpoint, body io.Reader) (IRequest, error)
+	NewRequest(method string, path APIEndpoint, body io.Reader) (IRequest, error)
 }
 
 // NewRequest build a Request for the API.
 // Prefer to use the available methods instead.
 //
 //nolint:ireturn
-func (api *API) NewRequest(method string, path internal.APIEndpoint, body io.Reader) (IRequest, error) {
+func (api *API) NewRequest(method string, path APIEndpoint, body io.Reader) (IRequest, error) {
 	endpoint := api.domain.JoinPath(string(path)).String()
 
 	ctx := context.Background()
@@ -116,7 +114,7 @@ func (request *Request) Do() (*json.RawMessage, error) {
 	defer request.cancel(nil)
 
 	rateLimitPath := request.httpRequest.URL.EscapedPath()
-	internal.ApplyRateLimit(rateLimitPath, request.api.rateLimits)
+	request.api.rateLimits.ApplyRateLimit(rateLimitPath)
 
 	//nolint:bodyclose // body is closed in lambda
 	response, err := request.api.client.Do(request.httpRequest)
@@ -135,11 +133,9 @@ func (request *Request) Do() (*json.RawMessage, error) {
 
 	slog.Debug("Request status", "status", response.Status)
 
-	limits, err := internal.ParseRateLimits(response)
+	err = request.api.rateLimits.ParseRateLimits(rateLimitPath, response)
 	if err != nil {
 		slog.Warn("Fail to parse rate limits", "error", err)
-	} else {
-		request.api.rateLimits[rateLimitPath] = *limits
 	}
 
 	if response.StatusCode == int(rateLimited) || response.StatusCode == int(timeout) {

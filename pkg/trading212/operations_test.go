@@ -10,8 +10,6 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"testing"
-
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
 type mockRequestMaker struct {
@@ -20,7 +18,7 @@ type mockRequestMaker struct {
 }
 
 //nolint:ireturn
-func (mock *mockRequestMaker) NewRequest(_ string, _ internal.APIEndpoint, _ io.Reader) (IRequest, error) {
+func (mock *mockRequestMaker) NewRequest(_ string, _ APIEndpoint, _ io.Reader) (IRequest, error) {
 	return mock.request, mock.err
 }
 
@@ -95,11 +93,11 @@ func validateOperation[T any](t *testing.T, operation func(*API) (T, error), moc
 				headers := w.Header()
 
 				headers.Set("Content-Type", "application/json; charset=utf-8")
-				headers.Set(internal.RateLimitHeaderLimit, "10")
-				headers.Set(internal.RateLimitHeaderPeriod, "10")
-				headers.Set(internal.RateLimitHeaderRemaining, "10")
-				headers.Set(internal.RateLimitHeaderReset, "0")
-				headers.Set(internal.RateLimitHeaderUsed, "0")
+				headers.Set(RateLimitHeaderLimit, "10")
+				headers.Set(RateLimitHeaderPeriod, "10")
+				headers.Set(RateLimitHeaderRemaining, "10")
+				headers.Set(RateLimitHeaderReset, "0")
+				headers.Set(RateLimitHeaderUsed, "0")
 
 				w.WriteHeader(http.StatusOK)
 

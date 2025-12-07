@@ -1,10 +1,9 @@
 package trading212
 
 import (
+	models "github.com/cyrbil/go-trading212/pkg/trading212/models"
 	"iter"
 	"testing"
-
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 )
 
 func Test_Positions_Operations(t *testing.T) {

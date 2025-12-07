@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
 )
 
 const defaultTimeout = 5 * time.Second
@@ -33,7 +31,7 @@ type API struct {
 	domain     *url.URL
 	apiKey     string
 	apiSecret  SecureString
-	rateLimits map[string]internal.APIRateLimits
+	rateLimits *RateLimiter
 
 	client *http.Client
 }
@@ -71,7 +69,7 @@ func NewAPI(apiURL APIURL, apiKey string, apiSecret SecureString) (*API, error) 
 		domain:     domainURL,
 		apiKey:     apiKey,
 		apiSecret:  apiSecret,
-		rateLimits: make(map[string]internal.APIRateLimits),
+		rateLimits: NewRateLimiter(),
 		client: &http.Client{
 			Transport:     nil,
 			CheckRedirect: nil,

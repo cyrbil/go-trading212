@@ -10,22 +10,23 @@ on:
       - "main"
 
 permissions:
-  contents: "write" # for badge
-  security-events: "write" # for sarif upload
-  pull-requests: "write" # for comment
+  contents: "read"
 
 jobs:
   coverage:
     name: "Coverage ${{ github.event_name }}"
-    runs-on: ["ubuntu-latest"]
+    runs-on: "ubuntu-latest"
     steps:
       # Checkout code
       - name: "Checkout project"
-        uses: "actions/checkout@v6.0.0"
+        uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8"
+        with:
+          fetch-depth: 1
+          persist-credentials: false
 
       # Install golang
       - name: "Set-up Go"
-        uses: "actions/setup-go@v6.1.0"
+        uses: "actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c"
         with:
           go-version: "stable"
 
@@ -35,10 +36,19 @@ jobs:
         shell: "bash"
         run: "go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./..."
 
+  coverage-report:
+    name: "Coverage report ${{ github.event_name }}"
+    needs: "coverage"
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: "read"
+      actions: "read" # to download code coverage
+      pull-requests: "write" # write permission needed to comment on PR
+    steps:
       # Retrieve coverage breakdown
       - name: "Download artifact (coverage.breakdown.txt)"
         id: "download-main-breakdown"
-        uses: "dawidd6/action-download-artifact@v11"
+        uses: "dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5"
         with:
           branch: "main"
           workflow_conclusion: "success"
@@ -48,7 +58,7 @@ jobs:
       # Upload coverage comment
       - name: "Check test coverage"
         id: "go-test-coverage"
-        uses: "vladopajic/go-test-coverage/action/source@v2"
+        uses: "vladopajic/go-test-coverage/action/source@d9ec07b8799c458a7bc1f9b36d14261746d63529"
         continue-on-error: true
         with:
           # config
@@ -76,7 +86,7 @@ jobs:
 
       # Upload coverage breakdown
       - name: "Upload artifact (coverage.breakdown.txt)"
-        uses: "actions/upload-artifact@v5"
+        uses: "actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4"
         with:
           name: "coverage.breakdown.txt"
           path: "coverage.breakdown.txt"
@@ -84,7 +94,7 @@ jobs:
 
       # Upload coverage artifacts
       - name: "Upload artifact (coverage files)"
-        uses: "actions/upload-artifact@v5"
+        uses: "actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4"
         with:
           name: "coverage-artifacts.zip"
           path: |
@@ -96,7 +106,7 @@ jobs:
       # Comment PR
       - name: "Comment PR with coverage"
         if: "github.event_name == 'pull_request'"
-        uses: "thollander/actions-comment-pull-request@v3"
+        uses: "thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b"
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           comment-tag: "go-coverage"

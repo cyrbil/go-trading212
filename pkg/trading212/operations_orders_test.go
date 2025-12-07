@@ -1,10 +1,9 @@
 package trading212
 
 import (
+	trading213 "github.com/cyrbil/go-trading212/pkg/trading212/models"
 	"iter"
 	"testing"
-
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 )
 
 func Test_Orders_Operations(t *testing.T) {
@@ -13,9 +12,9 @@ func Test_Orders_Operations(t *testing.T) {
 	t.Run(
 		"Test Orders GetAllPendingOrders", func(t *testing.T) {
 			t.Parallel()
-			validateOperationItems[models.Order](
+			validateOperationItems[trading213.Order](
 				t,
-				func(api *API) (iter.Seq[*models.Order], error) {
+				func(api *API) (iter.Seq[*trading213.Order], error) {
 					return api.Orders.GetAllPendingOrders()
 				}, `
 			[{
@@ -51,10 +50,10 @@ func Test_Orders_Operations(t *testing.T) {
 	t.Run(
 		"Test Orders PlaceLimitOrder", func(t *testing.T) {
 			t.Parallel()
-			validateOperationObject[models.Order](
+			validateOperationObject[trading213.Order](
 				t,
-				func(api *API) (*models.Order, error) {
-					return api.Orders.PlaceLimitOrder(models.LimitOrderRequest{})
+				func(api *API) (*trading213.Order, error) {
+					return api.Orders.PlaceLimitOrder(trading213.LimitOrderRequest{})
 				}, `
 			{
 				"createdAt": "2019-08-24T14:15:22Z",
@@ -89,10 +88,10 @@ func Test_Orders_Operations(t *testing.T) {
 	t.Run(
 		"Test Orders PlaceMarketOrder", func(t *testing.T) {
 			t.Parallel()
-			validateOperationObject[models.Order](
+			validateOperationObject[trading213.Order](
 				t,
-				func(api *API) (*models.Order, error) {
-					return api.Orders.PlaceMarketOrder(models.MarketOrderRequest{})
+				func(api *API) (*trading213.Order, error) {
+					return api.Orders.PlaceMarketOrder(trading213.MarketOrderRequest{})
 				}, `
 			{
 				"createdAt": "2019-08-24T14:15:22Z",
@@ -127,10 +126,10 @@ func Test_Orders_Operations(t *testing.T) {
 	t.Run(
 		"Test Orders PlaceStopOrder", func(t *testing.T) {
 			t.Parallel()
-			validateOperationObject[models.Order](
+			validateOperationObject[trading213.Order](
 				t,
-				func(api *API) (*models.Order, error) {
-					return api.Orders.PlaceStopOrder(models.StopOrderRequest{})
+				func(api *API) (*trading213.Order, error) {
+					return api.Orders.PlaceStopOrder(trading213.StopOrderRequest{})
 				}, `
 			{
 				"createdAt": "2019-08-24T14:15:22Z",
@@ -165,10 +164,10 @@ func Test_Orders_Operations(t *testing.T) {
 	t.Run(
 		"Test Orders PlaceStopLimitOrder", func(t *testing.T) {
 			t.Parallel()
-			validateOperationObject[models.Order](
+			validateOperationObject[trading213.Order](
 				t,
-				func(api *API) (*models.Order, error) {
-					return api.Orders.PlaceStopLimitOrder(models.StopLimitOrderRequest{})
+				func(api *API) (*trading213.Order, error) {
+					return api.Orders.PlaceStopLimitOrder(trading213.StopLimitOrderRequest{})
 				}, `
 			{
 				"createdAt": "2019-08-24T14:15:22Z",
@@ -203,10 +202,10 @@ func Test_Orders_Operations(t *testing.T) {
 	t.Run(
 		"Test Orders CancelOrder", func(t *testing.T) {
 			t.Parallel()
-			validateOperationObject[models.Empty](
+			validateOperationObject[trading213.Empty](
 				t,
-				func(api *API) (*models.Empty, error) {
-					return &models.Empty{}, api.Orders.CancelOrder(0)
+				func(api *API) (*trading213.Empty, error) {
+					return &trading213.Empty{}, api.Orders.CancelOrder(0)
 				}, "",
 			)
 		},
@@ -215,9 +214,9 @@ func Test_Orders_Operations(t *testing.T) {
 	t.Run(
 		"Test Orders GetPendingOrderByID", func(t *testing.T) {
 			t.Parallel()
-			validateOperationObject[models.Order](
+			validateOperationObject[trading213.Order](
 				t,
-				func(api *API) (*models.Order, error) {
+				func(api *API) (*trading213.Order, error) {
 					return api.Orders.GetPendingOrderByID(0)
 				}, `
 			{

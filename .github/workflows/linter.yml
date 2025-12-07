@@ -8,43 +8,58 @@ on:
 
 permissions:
   contents: "read"
-  pull-requests: "write" # for comment
 
 jobs:
   linter:
     name: "Linter ${{ github.event_name }}"
-    runs-on: ["ubuntu-latest"]
+    runs-on: "ubuntu-latest"
+    permissions:
+      pull-requests: "write" # for comment
+      security-events: "write" # for sarif upload
+      statuses: "write" #
+
     steps:
       # Checkout code
       - name: "Checkout project"
-        uses: "actions/checkout@v6.0.0"
+        uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8"
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
-      # Run linter
+      # Run complete linters
       - name: "Run static analysis"
         id: linter
-        uses: "oxsecurity/megalinter/flavors/go@v9.2.0"
+        uses: "cyrbil/go-trading212@d317ad56d8f44edcd42cfff7636d2009e4673a60"
         continue-on-error: true
         env:
+          GITHUB_STEP_SUMMARY: "true"
           SARIF_REPORTER: "true"
-          DISABLE_LINTERS: >-
-            SPELL_CSPELL
           GO_REVIVE_CONFIG_FILE: ".configs/revive.toml"
-          GO_GOLANGCI_LINT_CONFIG_FILE: ".configs/.golangci.yml"
+          GO_GOLANGCI_LINT_CONFIG_FILE: ".configs/golangci.yml"
 
-      # Upload linter artifacts
-      - name: "Archive linter artifacts"
-        uses: "actions/upload-artifact@v4"
+      # Comment PR
+      - name: "Comment PR with summary"
+        if: "github.event_name == 'pull_request'"
+        uses: "thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b"
         with:
-          name: "linter reports"
-          path: |
-            megalinter-reports
-            mega-linter.log
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          comment-tag: "mega-linter"
+          file-path: "megalinter-reports/megalinter-report.md"
 
       # Send results to PR
       - name: "Upload MegaLinter scan results to GitHub"
-        uses: "github/codeql-action/upload-sarif@v4"
+        uses: "github/codeql-action/upload-sarif@267c4672a565967e4531438f2498370de5e8a98d"
         with:
           sarif_file: "megalinter-reports/megalinter-report.sarif"
+
+      # Upload linter artifacts
+      - name: "Archive linter artifacts"
+        uses: "actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4"
+        with:
+          name: "megalinter reports"
+          path: |
+            megalinter-reports
+            mega-linter.log
 
       # Assert linter passes
       - name: "Validate linter passes"

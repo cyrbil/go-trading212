@@ -50,52 +50,23 @@ type APIRateLimits struct {
 	Used uint64
 }
 
-// ParseRateLimits parses the http response rate limit headers.
-func ParseRateLimits(response *http.Response) (*APIRateLimits, error) {
-	headers := map[string]uint64{
-		RateLimitHeaderLimit:     0,
-		RateLimitHeaderPeriod:    0,
-		RateLimitHeaderRemaining: 0,
-		RateLimitHeaderReset:     0,
-		RateLimitHeaderUsed:      0,
+// RateLimiter type
+type RateLimiter struct {
+	limits map[string]APIRateLimits
+	sleep  func(time.Duration)
+}
+
+// NewRateLimiter creates a RateLimiter
+func NewRateLimiter() *RateLimiter {
+	return &RateLimiter{
+		limits: make(map[string]APIRateLimits),
+		sleep:  time.Sleep,
 	}
-
-	for header := range headers {
-		str := response.Header.Get(header)
-		if str == "" {
-			return nil, headerNotFoundError(header)
-		}
-
-		value, err := strconv.ParseUint(str, 10, 0)
-		if err != nil {
-			return nil, headerConversionError(header, str)
-		}
-
-		headers[header] = value
-	}
-
-	if headers[RateLimitHeaderPeriod] > math.MaxInt64 {
-		return nil, errHeaderConversion
-	}
-
-	if headers[RateLimitHeaderReset] > math.MaxInt64 {
-		return nil, errHeaderConversion
-	}
-
-	rateLimits := &APIRateLimits{
-		Limit:     headers[RateLimitHeaderLimit],
-		Period:    time.Duration(headers[RateLimitHeaderPeriod]) * time.Second, //nolint:gosec
-		Remaining: headers[RateLimitHeaderRemaining],
-		Reset:     time.Unix(int64(headers[RateLimitHeaderReset]), 0), //nolint:gosec
-		Used:      headers[RateLimitHeaderUsed],
-	}
-
-	return rateLimits, nil
 }
 
 // ApplyRateLimit will sleep if a rate limit is in place.
-func ApplyRateLimit(path string, rateLimits map[string]APIRateLimits) {
-	limits, found := rateLimits[path]
+func (r *RateLimiter) ApplyRateLimit(path string) {
+	limits, found := r.limits[path]
 	if !found {
 		return
 	}
@@ -111,5 +82,52 @@ func ApplyRateLimit(path string, rateLimits map[string]APIRateLimits) {
 		return
 	}
 
-	time.Sleep(time.Until(limits.Reset))
+	r.sleep(time.Until(limits.Reset))
+}
+
+// ParseRateLimits parses the http response rate limit headers.
+func (r *RateLimiter) ParseRateLimits(path string, response *http.Response) error {
+	if response == nil || response.Header == nil || response.Request == nil || response.Request.URL == nil {
+		return headerNotFoundError("response is nil")
+	}
+	headers := map[string]uint64{
+		RateLimitHeaderLimit:     0,
+		RateLimitHeaderPeriod:    0,
+		RateLimitHeaderRemaining: 0,
+		RateLimitHeaderReset:     0,
+		RateLimitHeaderUsed:      0,
+	}
+
+	for header := range headers {
+		str := response.Header.Get(header)
+		if str == "" {
+			return headerNotFoundError(header)
+		}
+
+		value, err := strconv.ParseUint(str, 10, 0)
+		if err != nil {
+			return headerConversionError(header, str)
+		}
+
+		headers[header] = value
+	}
+
+	if headers[RateLimitHeaderPeriod] > math.MaxInt64 {
+		return errHeaderConversion
+	}
+
+	if headers[RateLimitHeaderReset] > math.MaxInt64 {
+		return errHeaderConversion
+	}
+
+	rateLimits := &APIRateLimits{
+		Limit:     headers[RateLimitHeaderLimit],
+		Period:    time.Duration(headers[RateLimitHeaderPeriod]) * time.Second, //nolint:gosec
+		Remaining: headers[RateLimitHeaderRemaining],
+		Reset:     time.Unix(int64(headers[RateLimitHeaderReset]), 0), //nolint:gosec
+		Used:      headers[RateLimitHeaderUsed],
+	}
+
+	r.limits[path] = *rateLimits
+	return nil
 }

@@ -1,4 +1,4 @@
-package trading212
+package models
 
 // AccountSummary response type.
 type AccountSummary struct {

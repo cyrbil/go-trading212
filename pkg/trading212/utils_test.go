@@ -5,10 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	models "github.com/cyrbil/go-trading212/pkg/trading212/models"
 	"reflect"
 	"testing"
-
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
 )
 
 func Test_SecureString(t *testing.T) {

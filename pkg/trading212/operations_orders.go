@@ -5,8 +5,7 @@ import (
 	"iter"
 	"net/http"
 
-	models "github.com/cyrbil/go-trading212/api/pkg/trading212"
-	internal "github.com/cyrbil/go-trading212/internal/pkg/trading212"
+	"github.com/cyrbil/go-trading212/pkg/trading212/models"
 )
 
 type operationGetAllPendingOrders interface {
@@ -92,33 +91,33 @@ type orders struct {
 }
 
 func (op *orders) GetAllPendingOrders() (iter.Seq[*models.Order], error) {
-	return runOperation[models.Order](op.api, http.MethodGet, internal.GetAllPendingOrders, nil).Items()
+	return runOperation[models.Order](op.api, http.MethodGet, GetAllPendingOrders, nil).Items()
 }
 
 func (op *orders) PlaceLimitOrder(req models.LimitOrderRequest) (*models.Order, error) {
-	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceLimitOrder, req).Object()
+	return runOperation[models.Order](op.api, http.MethodPost, PlaceLimitOrder, req).Object()
 }
 
 func (op *orders) PlaceMarketOrder(req models.MarketOrderRequest) (*models.Order, error) {
-	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceMarketOrder, req).Object()
+	return runOperation[models.Order](op.api, http.MethodPost, PlaceMarketOrder, req).Object()
 }
 
 func (op *orders) PlaceStopOrder(req models.StopOrderRequest) (*models.Order, error) {
-	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceStopOrder, req).Object()
+	return runOperation[models.Order](op.api, http.MethodPost, PlaceStopOrder, req).Object()
 }
 
 func (op *orders) PlaceStopLimitOrder(req models.StopLimitOrderRequest) (*models.Order, error) {
-	return runOperation[models.Order](op.api, http.MethodPost, internal.PlaceStopLimitOrder, req).Object()
+	return runOperation[models.Order](op.api, http.MethodPost, PlaceStopLimitOrder, req).Object()
 }
 
 func (op *orders) CancelOrder(id int64) error {
-	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.CancelOrder, id))
+	endpoint := APIEndpoint(fmt.Sprintf("%s/%d", CancelOrder, id))
 
 	return runOperation[models.Empty](op.api, http.MethodDelete, endpoint, nil).err
 }
 
 func (op *orders) GetPendingOrderByID(id int64) (*models.Order, error) {
-	endpoint := internal.APIEndpoint(fmt.Sprintf("%s/%d", internal.GetPendingOrderByID, id))
+	endpoint := APIEndpoint(fmt.Sprintf("%s/%d", GetPendingOrderByID, id))
 
 	return runOperation[models.Order](op.api, http.MethodGet, endpoint, nil).Object()
 }

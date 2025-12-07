@@ -1,4 +1,4 @@
-package trading212
+package models
 
 import "time"
 

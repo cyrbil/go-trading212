@@ -46,11 +46,6 @@ func (r *Response[T]) validate() error {
 
 // Object get single response object.
 func (r *Response[T]) Object() (*T, error) {
-	err := r.validate()
-	if err != nil {
-		return nil, err
-	}
-
 	iterator, err := r.Items()
 	if err != nil {
 		return nil, err
