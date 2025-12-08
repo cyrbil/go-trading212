@@ -42,22 +42,27 @@ jobs:
               -e CUSTOM_FLAVOR_BUILD_REPO=${{ github.repository }} \
               -e CUSTOM_FLAVOR_BUILD_REPO_URL=${{ github.repositoryUrl }} \
               -e CUSTOM_FLAVOR_BUILD_USER=${{ github.actor }} \
-            ghcr.io/oxsecurity/megalinter-custom-flavor-builder:latest
+            ghcr.io/oxsecurity/megalinter-custom-flavor-builder@sha256:cd2aac1571be2858f6d221e2ecf9fd347e049c9d4d210d52b9b19c1b192afb36
 
       - name: Tag and Push Docker Image
         shell: bash
+        env:
+            OWNER: "${{ github.repository_owner }}"
+            REPO: "${{ github.repository }}"
+            REPO_NAMZ: "${{ github.event.repository.name }}"
         run: |
           # TAG AND PUSH DOCKER IMAGE
-          IMAGE_NAME=$(echo "${{ github.repository }}" | tr '/' '_')
-          IMAGE_VERSION=$(docker inspect --format='{{index .Config.Labels "org.opencontainers.image.version"}}' $IMAGE_NAME)
+          IMAGE_NAME="$(echo "$REPO" | tr '/' '_')"
+          IMAGE_VERSION="$(
+              docker inspect --format='{{index .Config.Labels "org.opencontainers.image.version"}}' $IMAGE_NAME
+          )"
           echo "Custom flavor Image Name: $IMAGE_NAME"
           echo "Custom flavor Image Version: $IMAGE_VERSION"
           
           echo "Pushing to GitHub Container Registry (GHCR)..."
-          docker tag $IMAGE_NAME ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/megalinter-custom-flavor:$IMAGE_VERSION
-          docker push ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/megalinter-custom-flavor:$IMAGE_VERSION
-          docker tag $IMAGE_NAME ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/megalinter-custom-flavor:latest
-          docker push ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/megalinter-custom-flavor:latest
-          echo "Pushed custom flavor image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/megalinter-custom-flavor:latest"
-          echo "Pushed custom flavor image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/megalinter-custom-flavor:$IMAGE_VERSION"
-
+          for VERSION in "$IMAGE_VERSION" "latest"; do
+              TAG="ghcr.io/$OWNER/$REPO_NAME/megalinter-custom-flavor:$IMAGE_VERSION"
+              docker tag "$IMAGE_NAME" "$TAG"
+              docker push "$TAG"
+              echo "Pushed custom flavor image: $TAG"
+          done
