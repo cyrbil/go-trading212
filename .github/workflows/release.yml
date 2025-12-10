@@ -19,7 +19,6 @@ jobs:
         uses: "actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8"
         with:
           fetch-depth: 0
-          persist-credentials: false
 
       - name: "Import GPG key"
         uses: "crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec"
