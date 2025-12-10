@@ -43,6 +43,7 @@ jobs:
       - name: "Release tag"
         shell: "bash"
         run: |
+          git config list
           git tag \
               -s "${STEPS_SEMVER_OUTPUTS_NEW_TAG}" \
               -m "Release ${STEPS_SEMVER_OUTPUTS_NEW_TAG}"
